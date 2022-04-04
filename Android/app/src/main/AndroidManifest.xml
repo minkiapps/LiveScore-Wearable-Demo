@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.minkiapps.android.livescore">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LiveScoreDemo">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveScoreDemo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:exported="true"
+            android:name=".WearEngineService"/>
+
+        <!-- the ID here must be registered in AGC wear engine -->
+        <!-- for test purposes, this can be different than the actual app id -->
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="104443109"/>
+    </application>
+
+    <queries>
+        <package android:name="com.huawei.health"/>
+    </queries>
+
+</manifest>
