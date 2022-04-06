@@ -13,8 +13,10 @@ import com.huawei.wearengine.HiWear
 import com.huawei.wearengine.client.ServiceConnectionListener
 import com.huawei.wearengine.client.WearEngineClient
 import com.huawei.wearengine.device.Device
+import com.huawei.wearengine.p2p.Message
 import com.huawei.wearengine.p2p.P2pClient
 import com.huawei.wearengine.p2p.Receiver
+import com.huawei.wearengine.p2p.SendCallback
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.log.LogModel
@@ -30,6 +32,18 @@ class WearEngineService : Service(), LogListener {
 
     inner class LocalBinder : Binder() {
         fun getService(): WearEngineService = this@WearEngineService
+    }
+
+    private inner class ReceiverImpl : Receiver {
+
+        var device : Device? = null
+
+        override fun onReceiveMessage(m: Message) {
+            emitDebugLog("Received message: ${String(m.data)}")
+            device?.let {
+                sendMessage(it, "Hello from Phone")
+            }
+        }
     }
 
     private val job = Job()
@@ -55,10 +69,7 @@ class WearEngineService : Service(), LogListener {
     }
 
     var logListener : LogListener? = null
-
-    private val receiver : Receiver = Receiver { m ->
-        emitDebugLog("Received message from watch: ${String(m.data)}")
-    }
+    private var receiver = ReceiverImpl()
 
     override fun onCreate() {
         super.onCreate()
@@ -68,8 +79,18 @@ class WearEngineService : Service(), LogListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getParcelableExtra<Device>(EXTRA_DEVICE)?.let { d ->
+            if(d.uuid == receiver.device?.uuid) {
+                emitDebugLog("Receiver for device ${d.name} is already registered")
+                return@let
+            }
+
             scope.launch {
                 try {
+                    if(receiver.device == null) {
+                        emitDebugLog("Unregister receiver for device: ${receiver.device?.name}")
+                        p2pClient.unregisterReceiver(receiver)
+                    }
+                    receiver.device = d
                     p2pClient.registerReceiver(d, receiver).await()
                     emitDebugLog("Register receiver to device successful")
                 } catch (e : Exception) {
@@ -115,6 +136,27 @@ class WearEngineService : Service(), LogListener {
 
         // Notification ID cannot be 0.
         startForeground(ONGOING_NOTIFICATION_ID, notification)
+    }
+
+    private fun sendMessage(device: Device, text: String) {
+        val message = Message.Builder()
+            .setPayload(text.toByteArray())
+            .build()
+
+        val sendCallback: SendCallback = object : SendCallback {
+            override fun onSendResult(resultCode: Int) {
+                emitDebugLog("Send message result: $resultCode")
+            }
+            override fun onSendProgress(progress: Long) {
+                emitDebugLog("Send message progress: $progress")
+            }
+        }
+
+        p2pClient.send(device, message, sendCallback).addOnSuccessListener {
+            emitDebugLog("Send message successful")
+        }.addOnFailureListener {
+            emitDebugLog("Send message failed")
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {

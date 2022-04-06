@@ -24,14 +24,13 @@
         </activity>
 
         <service
-            android:exported="true"
+            android:exported="false"
             android:name=".WearEngineService"/>
 
         <!-- the ID here must be registered in AGC wear engine -->
-        <!-- for test purposes, this can be different than the actual app id -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="104443109"/>
+            android:value="105874595"/>
     </application>
 
     <queries>

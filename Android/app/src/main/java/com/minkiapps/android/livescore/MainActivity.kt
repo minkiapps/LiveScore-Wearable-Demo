@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LogUI(logDateFormatter, mainViewModel.logs.value) {
+                    LogUI(logDateFormatter, packageName, mainViewModel.logs.value) {
                         mainViewModel.clearLogs()
                     }
                 }
@@ -138,6 +138,7 @@ fun ShowEnableHuaweiWearablePermissionDialog(
 @Composable
 fun LogUI(
     formatter: SimpleDateFormat,
+    packageName : String,
     logLines: List<LogModel>,
     clearLogs: () -> Unit
 ) {
@@ -152,7 +153,7 @@ fun LogUI(
     ) {
         Column(Modifier.fillMaxSize()) {
             Text(
-                text = "Log Output",
+                text = "Log Output (${packageName})",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,

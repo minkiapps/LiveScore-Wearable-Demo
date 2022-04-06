@@ -10,7 +10,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 const val PEER_PKG_NAME = "com.minkiapps.hos.livescore"
-const val PEER_FINGERPRINT = "com.minkiapps.hos.livescore_BNzyj7o0Qbm/dpsdskbpYJUyd3LT/LDHRkaL/AqoIbJjLFbb0rBC5sqfwPqUXQIK39m4/04q2EZTrb3YSCn/T8c="
+const val PEER_FINGERPRINT = "com.minkiapps.hos.livescore_BJsgJpKOKw0GyMGjCBnvkkwn+4qjKoRviLXEomoGhOrgSntXvroKmujhq0Z9jDBimZupk83c9K3nlo+q5RsgL/A="
 
 val appModule = module {
 

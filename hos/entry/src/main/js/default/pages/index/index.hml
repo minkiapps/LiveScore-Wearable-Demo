@@ -1,5 +1,9 @@
 <div class="container">
     <text class="title">
-        Hello {{ title }}
+        {{ stdout }}
+    </text>
+
+    <text class="log">
+        {{ receivedMsg }}
     </text>
 </div>

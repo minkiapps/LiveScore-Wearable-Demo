@@ -3,10 +3,17 @@
     height: 100%;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .title {
-    width: 200px;
+    width: 300px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.log {
+    width: 300px;
     font-size: 30px;
     text-align: center;
 }

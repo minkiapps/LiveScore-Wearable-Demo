@@ -19,7 +19,23 @@ android {
         }
     }
 
+    signingConfigs {
+        debug {
+            def keyStoreFile = file("../store/debug.keystore")
+            if (keyStoreFile.exists()) {
+                keyAlias "androiddebugkey"
+                storeFile keyStoreFile
+                storePassword "android"
+                keyPassword "android"
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

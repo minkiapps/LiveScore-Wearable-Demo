@@ -10,6 +10,7 @@ import com.huawei.wearengine.auth.Permission
 import com.huawei.wearengine.device.Device
 import com.huawei.wearengine.device.DeviceClient
 import com.huawei.wearengine.p2p.P2pClient
+import com.huawei.wearengine.p2p.Receiver
 import com.minkiapps.android.livescore.di.PEER_PKG_NAME
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.extensions.suspendRequestPermissions
@@ -39,6 +40,10 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
     val showAppInBackgroundCouldGetKilledWarning = mutableStateOf(false)
 
     private val startWearEngineServiceLiveData = MutableLiveData<Device>()
+
+    private val receiver : Receiver = Receiver { m ->
+        emitDebugLog("Received message from watch: ${String(m.data)}")
+    }
 
     fun getStartWearEngineServiceLiveData() : LiveData<Device> = startWearEngineServiceLiveData
 
