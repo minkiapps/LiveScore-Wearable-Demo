@@ -13,9 +13,9 @@ ohos {
             certpath file('/Users/mingkangpan/Documents/minki/code/A_H/LiveScoreDemo/hos/signing/minkiapps.cer')
         }
     }
-    compileSdkVersion 7
+    compileSdkVersion 6
     defaultConfig {
-        compatibleSdkVersion 4
+        compatibleSdkVersion 3
     }
     buildTypes {
         release {
