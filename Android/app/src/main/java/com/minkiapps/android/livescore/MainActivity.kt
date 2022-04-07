@@ -116,7 +116,7 @@ fun ServiceLogButton(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
+                            .height(400.dp)
                             .padding(4.dp)
                     ) {
                         items(getServiceLogs()) { i ->
@@ -212,7 +212,6 @@ fun LogUI(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
         ) {
             Text(
                 text = "Log Output (${packageName})",
