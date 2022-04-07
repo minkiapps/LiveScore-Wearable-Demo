@@ -21,6 +21,7 @@ import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
+import com.minkiapps.android.livescore.prefs.AppPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,6 +30,8 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class WearEngineService : Service(), LogListener {
+
+    private val appPreferences : AppPreferences by inject()
 
     inner class LocalBinder : Binder() {
         fun getService(): WearEngineService = this@WearEngineService
@@ -74,6 +77,8 @@ class WearEngineService : Service(), LogListener {
     override fun onCreate() {
         super.onCreate()
         wearEngineClient.registerServiceConnectionListener()
+
+        appPreferences.addServiceLog("WearEngine Service created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -166,6 +171,7 @@ class WearEngineService : Service(), LogListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        appPreferences.addServiceLog("WearEngine Service destroyed")
         job.cancel()
     }
 

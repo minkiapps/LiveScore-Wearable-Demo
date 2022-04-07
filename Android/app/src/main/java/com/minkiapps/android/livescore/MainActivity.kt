@@ -23,22 +23,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.minkiapps.android.livescore.WearEngineService.Companion.EXTRA_DEVICE
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
+import com.minkiapps.android.livescore.prefs.AppPreferences
 import com.minkiapps.android.livescore.ui.theme.LiveScoreDemoTheme
 import com.minkiapps.android.livescore.util.getSignatureSha256Fingerprint
+import org.koin.android.ext.android.inject
 import timber.log.Timber
-import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
+    private val appPreferences: AppPreferences by inject()
 
     private var wearEngineService: WearEngineService? = null
-    private val logDateFormatter = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
+
+    private val logDateFormatter = SimpleDateFormat("MMM dd, HH:mm:ss.SSS", Locale.getDefault())
+    private val serviceLogDateFormatter = SimpleDateFormat("MMM dd, HH:mm:ss", Locale.getDefault())
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -61,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LiveScoreDemoTheme {
-                if(mainViewModel.showHuaweiHealthPermissionApp.value) {
+                if (mainViewModel.showHuaweiHealthPermissionApp.value) {
                     ShowEnableHuaweiWearablePermissionDialog(
                         {
                             mainViewModel.gotoHiWearPermissionPage()
@@ -74,13 +79,28 @@ class MainActivity : ComponentActivity() {
 
                 Surface(
                     color = MaterialTheme.colors.background,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
-                    LogUI(logDateFormatter,
-                        packageName,
-                        getSignatureSha256Fingerprint(),
-                        mainViewModel.logs.value) {
-                        mainViewModel.clearLogs()
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    ) {
+                        ServiceLogButton(serviceLogDateFormatter, {
+                            appPreferences.getAllServiceLog()
+                        }, {
+                            appPreferences.deleteServiceLogs()
+                        })
+
+                        LogUI(
+                            logDateFormatter,
+                            packageName,
+                            getSignatureSha256Fingerprint(),
+                            mainViewModel.logs.value
+                        ) {
+                            mainViewModel.clearLogs()
+                        }
                     }
                 }
             }
@@ -102,6 +122,64 @@ class MainActivity : ComponentActivity() {
             it.logListener = null
             unbindService(connection)
         }
+    }
+}
+
+@Composable
+fun ServiceLogButton(
+    formatter: SimpleDateFormat,
+    getServiceLogs: () -> List<Pair<Long, String>>,
+    deleteLogClick: () -> Unit
+) {
+    var showLogDialog by remember { mutableStateOf(false) }
+
+    if (showLogDialog) {
+        Dialog(onDismissRequest = { showLogDialog = false }) {
+            Card {
+                Column {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .padding(4.dp)
+                    ) {
+                        items(getServiceLogs()) { i ->
+                            val text = "${formatter.format(Date(i.first))}: ${i.second}"
+
+                            Text(
+                                text = text,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        TextButton(onClick = {
+                            showLogDialog = false
+                        }) {
+                            Text(text = "Cancel")
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TextButton(onClick = {
+                            showLogDialog = false
+                            deleteLogClick.invoke()
+                        }) {
+                            Text(text = "Delete Logs")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Button(onClick = {
+        showLogDialog = true
+    }) {
+        Text(text = "Show Service Lifecycle Log")
     }
 }
 
@@ -143,8 +221,8 @@ fun ShowEnableHuaweiWearablePermissionDialog(
 @Composable
 fun LogUI(
     formatter: SimpleDateFormat,
-    packageName : String,
-    signatureFingerprint : String?,
+    packageName: String,
+    signatureFingerprint: String?,
     logLines: List<LogModel>,
     clearLogs: () -> Unit
 ) {
@@ -153,11 +231,13 @@ fun LogUI(
     val sorted = logLines.sortedBy { it.timeStamp }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
             Text(
                 text = "Log Output (${packageName})",
                 fontWeight = FontWeight.Bold,
@@ -187,7 +267,7 @@ fun LogUI(
                 items(sorted) { lm ->
                     val text = "${formatter.format(Date(lm.timeStamp))}: ${lm.text}"
 
-                    when(lm.type) {
+                    when (lm.type) {
                         Type.DEBUG -> Text(
                             text = text,
                             style = MaterialTheme.typography.caption,
