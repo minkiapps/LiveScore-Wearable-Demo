@@ -24,6 +24,7 @@
         </activity>
 
         <service
+            android:foregroundServiceType="connectedDevice"
             android:exported="false"
             android:name=".WearEngineService"/>
 

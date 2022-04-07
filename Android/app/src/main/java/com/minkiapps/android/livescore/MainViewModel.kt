@@ -10,7 +10,6 @@ import com.huawei.wearengine.auth.Permission
 import com.huawei.wearengine.device.Device
 import com.huawei.wearengine.device.DeviceClient
 import com.huawei.wearengine.p2p.P2pClient
-import com.huawei.wearengine.p2p.Receiver
 import com.minkiapps.android.livescore.di.PEER_PKG_NAME
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.extensions.suspendRequestPermissions
@@ -40,10 +39,6 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
     val showAppInBackgroundCouldGetKilledWarning = mutableStateOf(false)
 
     private val startWearEngineServiceLiveData = MutableLiveData<Device>()
-
-    private val receiver : Receiver = Receiver { m ->
-        emitDebugLog("Received message from watch: ${String(m.data)}")
-    }
 
     fun getStartWearEngineServiceLiveData() : LiveData<Device> = startWearEngineServiceLiveData
 
@@ -116,9 +111,14 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
     //    appPreferences.setShowAppCouldBeKilledInBackgroundWarning(false)
     //}
 
-    override fun emitDebugLog(log : String) {
+    override fun emitDebugLog(log: String) {
         Timber.d(log)
         addLog(LogModel(Type.DEBUG, log))
+    }
+
+    override fun emitFlashyLog(log: String) {
+        Timber.d(log)
+        addLog(LogModel(Type.FLASHY, log))
     }
 
     override fun emitExceptionLog(log : String, e : Exception) {
@@ -126,7 +126,7 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
         addLog(LogModel(Type.ERROR, "$log Exception message: ${e.message}"))
     }
 
-    private  fun addLog(newLogs : LogModel) {
+    private fun addLog(newLogs : LogModel) {
         logs.value = ArrayList(logs.value).apply { add(newLogs) }
     }
 

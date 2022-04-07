@@ -21,14 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minkiapps.android.livescore.WearEngineService.Companion.EXTRA_DEVICE
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
 import com.minkiapps.android.livescore.ui.theme.LiveScoreDemoTheme
+import com.minkiapps.android.livescore.util.getSignatureSha256Fingerprint
 import timber.log.Timber
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             LiveScoreDemoTheme {
                 if(mainViewModel.showHuaweiHealthPermissionApp.value) {
@@ -74,7 +76,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LogUI(logDateFormatter, packageName, mainViewModel.logs.value) {
+                    LogUI(logDateFormatter,
+                        packageName,
+                        getSignatureSha256Fingerprint(),
+                        mainViewModel.logs.value) {
                         mainViewModel.clearLogs()
                     }
                 }
@@ -139,6 +144,7 @@ fun ShowEnableHuaweiWearablePermissionDialog(
 fun LogUI(
     formatter: SimpleDateFormat,
     packageName : String,
+    signatureFingerprint : String?,
     logLines: List<LogModel>,
     clearLogs: () -> Unit
 ) {
@@ -157,8 +163,18 @@ fun LogUI(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 2.dp)
             )
+
+            signatureFingerprint?.let {
+                Text(
+                    text = it,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
 
             LazyColumn(
                 Modifier
@@ -170,16 +186,21 @@ fun LogUI(
             ) {
                 items(sorted) { lm ->
                     val text = "${formatter.format(Date(lm.timeStamp))}: ${lm.text}"
-                    if(lm.type == Type.ERROR) {
-                        Text(
+
+                    when(lm.type) {
+                        Type.DEBUG -> Text(
+                            text = text,
+                            style = MaterialTheme.typography.caption,
+                        )
+                        Type.FLASHY -> Text(
+                            text = text,
+                            style = MaterialTheme.typography.caption,
+                            color = Color.Cyan
+                        )
+                        Type.ERROR -> Text(
                             text = text,
                             style = MaterialTheme.typography.caption,
                             color = Color.Red
-                        )
-                    } else {
-                        Text(
-                            text = text,
-                            style = MaterialTheme.typography.caption,
                         )
                     }
                 }

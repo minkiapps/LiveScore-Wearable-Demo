@@ -74,21 +74,21 @@ class WearEngineService : Service(), LogListener {
     override fun onCreate() {
         super.onCreate()
         wearEngineClient.registerServiceConnectionListener()
-        startForeground()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getParcelableExtra<Device>(EXTRA_DEVICE)?.let { d ->
             if(d.uuid == receiver.device?.uuid) {
-                emitDebugLog("Receiver for device ${d.name} is already registered")
+                emitFlashyLog("Receiver for device ${d.name} is already registered")
                 return@let
             }
 
+            startForeground(d.name)
             scope.launch {
                 try {
                     if(receiver.device == null) {
                         emitDebugLog("Unregister receiver for device: ${receiver.device?.name}")
-                        p2pClient.unregisterReceiver(receiver)
+                        p2pClient.unregisterReceiver(receiver).await()
                     }
                     receiver.device = d
                     p2pClient.registerReceiver(d, receiver).await()
@@ -101,7 +101,7 @@ class WearEngineService : Service(), LogListener {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startForeground() {
+    private fun startForeground(deviceName : String) {
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -123,13 +123,14 @@ class WearEngineService : Service(), LogListener {
             PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
+        val contextText = "Connected to ${deviceName}\nYou can choose to hide this notification in notification settings."
         val notification: Notification = NotificationCompat.Builder(this, App.CHANNEL_ID)
             .setContentTitle("Huawei Watch")
-            .setContentText("You can choose to hide this notification in notification settings.")
+            .setContentText(contextText)
             .setSmallIcon(R.drawable.ic_baseline_watch_24)
             .setContentIntent(pendingIntent)
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("You can choose to hide this notification in notification settings."))
+                .bigText(contextText))
             .addAction(NotificationCompat.Action(R.mipmap.ic_launcher, "GOTO SETTINGS", notificationSettingsIntent))
             .addAction(NotificationCompat.Action(R.mipmap.ic_launcher, "OPEN HEALTH", healthIntent))
             .build()
@@ -159,7 +160,7 @@ class WearEngineService : Service(), LogListener {
         }
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         return binder
     }
 
@@ -174,6 +175,14 @@ class WearEngineService : Service(), LogListener {
             temporaryLogPersistence.add(LogModel(Type.DEBUG, log))
         }
         logListener?.emitDebugLog(log)
+    }
+
+    override fun emitFlashyLog(log: String) {
+        if(logListener == null) {
+            Timber.w(log)
+            temporaryLogPersistence.add(LogModel(Type.FLASHY, log))
+        }
+        logListener?.emitFlashyLog(log)
     }
 
     override fun emitExceptionLog(log: String, e: Exception) {
