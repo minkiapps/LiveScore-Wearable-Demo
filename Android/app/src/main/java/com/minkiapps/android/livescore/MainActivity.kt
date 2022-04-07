@@ -1,11 +1,7 @@
 package com.minkiapps.android.livescore
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -40,26 +36,8 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private val appPreferences: AppPreferences by inject()
 
-    private var wearEngineService: WearEngineService? = null
-
     private val logDateFormatter = SimpleDateFormat("MMM dd, HH:mm:ss.SSS", Locale.getDefault())
     private val serviceLogDateFormatter = SimpleDateFormat("MMM dd, HH:mm:ss", Locale.getDefault())
-
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as WearEngineService.LocalBinder
-            wearEngineService = binder.getService()
-            wearEngineService?.let {
-                it.logListener = mainViewModel
-                mainViewModel.addLogs(it.temporaryLogPersistence)
-                it.temporaryLogPersistence.clear()
-            }
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,17 +89,15 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, WearEngineService::class.java).apply {
                 putExtra(EXTRA_DEVICE, it)
             }
-            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            WearEngineService.logListener = mainViewModel
+
             startService(intent)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        wearEngineService?.let {
-            it.logListener = null
-            unbindService(connection)
-        }
+        WearEngineService.logListener = null
     }
 }
 

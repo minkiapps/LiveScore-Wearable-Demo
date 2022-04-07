@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
@@ -19,8 +18,6 @@ import com.huawei.wearengine.p2p.Receiver
 import com.huawei.wearengine.p2p.SendCallback
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
-import com.minkiapps.android.livescore.log.LogModel
-import com.minkiapps.android.livescore.log.Type
 import com.minkiapps.android.livescore.prefs.AppPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,10 +29,6 @@ import timber.log.Timber
 class WearEngineService : Service(), LogListener {
 
     private val appPreferences : AppPreferences by inject()
-
-    inner class LocalBinder : Binder() {
-        fun getService(): WearEngineService = this@WearEngineService
-    }
 
     private inner class ReceiverImpl : Receiver {
 
@@ -53,10 +46,6 @@ class WearEngineService : Service(), LogListener {
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
     private val p2pClient: P2pClient by inject()
-
-    private val binder = LocalBinder()
-
-    val temporaryLogPersistence = mutableListOf<LogModel>()
 
     private val wearEngineClient : WearEngineClient by lazy {
         HiWear.getWearEngineClient(this, object : ServiceConnectionListener {
@@ -165,8 +154,8 @@ class WearEngineService : Service(), LogListener {
         }
     }
 
-    override fun onBind(intent: Intent?): IBinder {
-        return binder
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
     }
 
     override fun onDestroy() {
@@ -176,30 +165,33 @@ class WearEngineService : Service(), LogListener {
     }
 
     override fun emitDebugLog(log: String) {
-        if(logListener == null) {
-            Timber.d(log)
-            temporaryLogPersistence.add(LogModel(Type.DEBUG, log))
-        }
+        Timber.d(log)
+        appPreferences.addServiceLog(log)
         logListener?.emitDebugLog(log)
     }
 
     override fun emitFlashyLog(log: String) {
-        if(logListener == null) {
-            Timber.w(log)
-            temporaryLogPersistence.add(LogModel(Type.FLASHY, log))
-        }
+        Timber.w(log)
+        appPreferences.addServiceLog(log)
         logListener?.emitFlashyLog(log)
     }
 
     override fun emitExceptionLog(log: String, e: Exception) {
-        if(logListener == null) {
-            Timber.e(log, e.message)
-            temporaryLogPersistence.add(LogModel(Type.ERROR, "$log Exception message: ${e.message}"))
-        }
+        Timber.e(log, e.message)
+        appPreferences.addServiceLog("$log Exception message: ${e.message}")
         logListener?.emitExceptionLog(log, e)
     }
 
     companion object {
+
+        //why I use this static variable hack instead of binder because unbind service on Activity
+        // brings on some devices to Service to restart, which is undesirable,
+        //also broadcast receiver seems to bring Service to restart
+
+        //https://stackoverflow.com/questions/33267793/android-service-closes-after-unbind
+
+        var logListener : LogListener? = null
+
         const val EXTRA_DEVICE = "EXTRA_DEVICE"
 
         private const val ONGOING_NOTIFICATION_ID = 10001
