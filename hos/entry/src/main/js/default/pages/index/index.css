@@ -6,6 +6,13 @@
     flex-direction: column;
 }
 
+/** font size only support 30 and 38 **/
+.title {
+    width: 466px;
+    text-align: center;
+    font-size: 38px;
+}
+
 .loader {
     width: 64px;
     height: 64px;
@@ -30,11 +37,13 @@
 
 .error_text {
     width: 400px;
-    font-size: 24px;
+    font-size: 30px;
     text-align: center;
 }
 
 .retry_text {
+    background-color: dodgerblue;
+    border-radius: 32px;
     margin-top: 32px;
     width: 240px;
     height: 64px;

@@ -15,7 +15,24 @@
             {{errorText}}
         </text>
 
-        <input class="retry_text" onclick="ping()">{{ $t('strings.retry') }}</input>
+        <text class="retry_text" onclick="ping()">{{ $t('strings.retry') }}</text>
+    </div>
+
+    <div elif="{{ui_status == 2}}" class="container">
+        <list class="container">
+            <list-item style="height: 100px;">
+                <text class="title">{{$t('strings.sport_events')}}</text>
+            </list-item>
+            <list-item for="{{sport_list}}" style="width: 466px; height: 100px;">
+                <div style="flex-direction: row; width: 466px; justify-content: center;">
+                    <image style="width: 64px; height: 64px;" ref="image" src="{{$item.logo}}"></image>
+                    <text style="text-align: center; margin-left: 24px;">
+                        {{$item.name}}
+                    </text>
+                </div>
+            </list-item>
+            <list-item style="height: 60px;"></list-item>
+        </list>
     </div>
 
 </div>

@@ -3,6 +3,14 @@
     "connecting_to_phone": "Connecting to phone...",
     "retry": "Retry",
     "app_not_installed" : "App is not installed on phone, please scan qr code and install app",
-    "failed_connecting_to_phone": "Failed connecting to phone, restart your phone app and try again"
+    "failed_connecting_to_phone": "Failed connecting to phone, restart your phone app and try again",
+
+    "sport_events" : "Sport Events",
+    "football" : "Football",
+    "tennis" : "Tennis",
+    "basketball" : "Basketball",
+    "hockey" : "Hockey",
+    "volleyball" : "Volleyball",
+    "handball" : "Handball"
   }
 }

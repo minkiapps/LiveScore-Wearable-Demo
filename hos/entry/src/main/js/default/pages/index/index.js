@@ -16,7 +16,8 @@ var messageClient = new P2pClient();
 export default {
 
     data: {
-        ui_status : 0, //0 loading, 1 error, 2 loaded
+        ui_status : 1, //0 loading, 1 error, 2 loaded
+        sport_list : [],
         //loading ui
         loadingText : "",
         //error ui
@@ -26,8 +27,21 @@ export default {
     onInit() {
         messageClient.setPeerPkgName(PEER_PACKAGE_NAME)
         messageClient.setPeerFingerPrint(PEER_FINGER_PRINT)
+
+        this.initSportList()
         this.registerReceiver()
         this.ping()
+    },
+
+    initSportList() {
+        this.sport_list = [
+            { type : 1, name : this.$t('strings.football'), logo : '/common/football.png'},
+            { type : 2, name : this.$t('strings.tennis'), logo : '/common/tennis.png'},
+            { type : 3, name : this.$t('strings.basketball'), logo : '/common/basketball.png'},
+            { type : 4, name : this.$t('strings.hockey'), logo : '/common/hockey.png'},
+            { type : 5, name : this.$t('strings.volleyball'), logo : '/common/volleyball.png'},
+            { type : 6, name : this.$t('strings.handball'), logo : '/common/handball.png'}
+        ]
     },
 
     registerReceiver() {
@@ -41,7 +55,6 @@ export default {
             },
             onReceiveMessage :function(message) {
                 console.log(message)
-                flash.ui_status = 2
             },
         }
         messageClient.registerReceiver(receiver)
@@ -92,9 +105,11 @@ export default {
             },
             onSendResult: function (resultCode) {
                 console.log(`send message result: ${resultCode.data} (${resultCode.code})`)
-                if(resultCode == 206) {
+                if(resultCode.code == 206) {
                     flash.ui_status = 1
                     flash.errorText = flash.$t('strings.failed_connecting_to_phone')
+                } else {
+                    flash.ui_status = 2
                 }
             },
             onSendProgress: function (count) {
