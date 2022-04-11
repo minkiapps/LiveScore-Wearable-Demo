@@ -97,7 +97,10 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
         devices.first { it.isConnected }?.let {
             val isAppInstalled = p2pClient.isAppInstalled(it, PEER_PKG_NAME).await()
             emitDebugLog("LiveScore App is installed: $isAppInstalled")
-            startWearEngineServiceLiveData.value = it
+
+            if(isAppInstalled) {
+                startWearEngineServiceLiveData.value = it
+            }
         }
     }
 
