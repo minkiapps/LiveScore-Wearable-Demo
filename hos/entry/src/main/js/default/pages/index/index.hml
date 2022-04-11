@@ -1,9 +1,21 @@
-<div class="container">
-    <text class="title">
-        {{ stdout }}
-    </text>
+<div class="container" onswipe="onSwipe">
 
-    <text class="log">
-        {{ receivedMsg }}
-    </text>
+    <div if="{{ui_status == 0}}" class="container">
+
+        <image src="common/loading.png" ref="image" class="loader"></image>
+
+        <text class="loading_text">
+            {{ loadingText }}
+        </text>
+
+    </div>
+
+    <div elif="{{ui_status == 1}}" class="container">
+        <text class="error_text">
+            {{errorText}}
+        </text>
+
+        <input class="retry_text" onclick="ping()">{{ $t('strings.retry') }}</input>
+    </div>
+
 </div>

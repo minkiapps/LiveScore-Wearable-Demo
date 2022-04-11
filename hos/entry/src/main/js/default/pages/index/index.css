@@ -6,14 +6,48 @@
     flex-direction: column;
 }
 
-.title {
+.loader {
+    width: 64px;
+    height: 64px;
+    animation-duration: 1500ms;
+    animation-iteration-count:infinite;
+    animation-fill-mode:forwards;
+    animation-name: loader;
+}
+
+.loading_text {
+    margin-top: 16px;
+    width: 400px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.refresh_button {
     width: 300px;
     font-size: 30px;
     text-align: center;
 }
 
-.log {
-    width: 300px;
+.error_text {
+    width: 400px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.retry_text {
+    margin-top: 32px;
+    width: 240px;
+    height: 64px;
     font-size: 30px;
     text-align: center;
+}
+
+@keyframes loader
+{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

@@ -1,4 +1,4 @@
-import { P2pClient , Builder, Message} from '../../wearengine/wearengine.js';
+import { P2pClient , Message, Builder} from '../../wearengine/wearengine.js';
 
 /**
  * precondition for wear engine to work
@@ -16,14 +16,16 @@ var messageClient = new P2pClient();
 export default {
 
     data: {
-        stdout: 'IDLE',
-        receivedMsg: 'Received message here'
+        ui_status : 0, //0 loading, 1 error, 2 loaded
+        //loading ui
+        loadingText : "",
+        //error ui
+        errorText : ""
     },
 
     onInit() {
         messageClient.setPeerPkgName(PEER_PACKAGE_NAME)
         messageClient.setPeerFingerPrint(PEER_FINGER_PRINT)
-
         this.registerReceiver()
         this.ping()
     },
@@ -39,7 +41,7 @@ export default {
             },
             onReceiveMessage :function(message) {
                 console.log(message)
-                flash.receivedMsg = message
+                flash.ui_status = 2
             },
         }
         messageClient.registerReceiver(receiver)
@@ -47,28 +49,33 @@ export default {
 
     ping() {
         var flash = this
-        flash.stdout = 'pinging phone'
+        flash.ui_status = 0
+        flash.loadingText = flash.$t('strings.connecting_to_phone')
         messageClient.ping({
             onSuccess: function () {
-                console.info("ping phone success")
-                flash.stdout = 'ping phone success'
+                console.log("ping phone success")
             },
             onFailure: function () {
-                console.info("ping phone failed")
-                flash.stdout = 'ping phone failed'
+                console.log("ping phone failed")
             },
             onPingResult: function (resultCode) {
-                console.info(`ping result: ${resultCode.data} (${resultCode.code})`)
-                flash.stdout = `ping result: ${resultCode.data} (${resultCode.code})`
+                console.log(`ping result: ${resultCode.data} (${resultCode.code})`)
                 if(resultCode.code == 205) {
-                    console.info(`Try to send message`)
-                    flash.askForScores()
+                    console.log(`Try to send message`)
+                    flash.check()
+                } else {
+                    flash.ui_status = 1
+                    if(resultCode.code == 204) {
+                        flash.errorText = flash.$t('strings.app_not_installed')
+                    } else {
+                        flash.errorText = flash.$t('strings.failed_connecting_to_phone')
+                    }
                 }
             },
         })
     },
 
-    askForScores() {
+    check() {
         var flash = this
 
         var builderClient = new Builder();
@@ -85,11 +92,20 @@ export default {
             },
             onSendResult: function (resultCode) {
                 console.log(`send message result: ${resultCode.data} (${resultCode.code})`)
-                flash.receivedMsg = `send message result: ${resultCode.data} (${resultCode.code})`
+                if(resultCode == 206) {
+                    flash.ui_status = 1
+                    flash.errorText = flash.$t('strings.failed_connecting_to_phone')
+                }
             },
             onSendProgress: function (count) {
                 console.log(`Send message progress: ${count}`);
             },
         });
+    },
+
+    onSwipe:function(event) {
+        if (event.direction === 'right') {
+            app.terminate();
+        }
     }
 }
