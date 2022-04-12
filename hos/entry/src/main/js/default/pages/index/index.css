@@ -8,6 +8,7 @@
 
 /** font size only support 30 and 38 **/
 .title {
+    margin-top: 32px;
     width: 466px;
     text-align: center;
     font-size: 38px;

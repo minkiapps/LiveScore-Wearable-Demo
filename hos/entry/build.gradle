@@ -13,7 +13,7 @@ ohos {
             certpath file('/Users/mingkangpan/Documents/minki/code/A_H/LiveScoreDemo/hos/signing/minkiapps.cer')
         }
     }
-    compileSdkVersion 7
+    compileSdkVersion 6 //max version is 6, or GT2 Pro won't work
     defaultConfig {
         compatibleSdkVersion 3
     }
