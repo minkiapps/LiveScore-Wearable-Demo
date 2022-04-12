@@ -28,7 +28,8 @@
     "js": [
       {
         "pages": [
-          "pages/index/index"
+          "pages/index/index",
+          "pages/event/event"
         ],
         "name": "default"
       }

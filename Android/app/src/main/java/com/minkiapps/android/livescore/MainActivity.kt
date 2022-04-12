@@ -20,12 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.minkiapps.android.livescore.WearEngineService.Companion.EXTRA_DEVICE
+import com.minkiapps.android.livescore.wearengine.WearEngineService.Companion.EXTRA_DEVICE
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
 import com.minkiapps.android.livescore.prefs.AppPreferences
 import com.minkiapps.android.livescore.ui.theme.LiveScoreDemoTheme
 import com.minkiapps.android.livescore.util.getSignatureSha256Fingerprint
+import com.minkiapps.android.livescore.wearengine.WearEngineService
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.text.SimpleDateFormat

@@ -16,7 +16,6 @@ import com.minkiapps.android.livescore.extensions.suspendRequestPermissions
 import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
-import com.minkiapps.android.livescore.prefs.AppPreferences
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -30,13 +29,10 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
 
     private val p2pClient: P2pClient by inject()
 
-    private val appPreferences : AppPreferences by inject()
-
     private val hiWearPermissions = arrayOf(Permission.DEVICE_MANAGER)
 
     val logs = mutableStateOf(listOf<LogModel>())
     val showHuaweiHealthPermissionApp = mutableStateOf(false)
-    val showAppInBackgroundCouldGetKilledWarning = mutableStateOf(false)
 
     private val startWearEngineServiceLiveData = MutableLiveData<Device>()
 
@@ -103,16 +99,6 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
             }
         }
     }
-
-    //private fun showAppCouldBeKilledInBackgroundWarning() {
-    //    if(appPreferences.showAppCouldBeKilledInBackgroundWarning()) {
-    //        showAppInBackgroundCouldGetKilledWarning.value = true
-    //    }
-    //}
-    //
-    //private fun setDontShowAppInBackgroundCouldGetKilledWarning() {
-    //    appPreferences.setShowAppCouldBeKilledInBackgroundWarning(false)
-    //}
 
     override fun emitDebugLog(log: String) {
         Timber.d(log)

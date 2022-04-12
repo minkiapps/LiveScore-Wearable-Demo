@@ -1,17 +1,5 @@
-import { P2pClient , Message, Builder} from '../../wearengine/wearengine.js';
-
-/**
- * precondition for wear engine to work
- *
- * 1. Android appID and applicationID must be registered in AGC and allowed to use wear engine
- * 2. SHA256 fingerprint must be from the keystore which is signed for the Android app
- * 3. SHA256 fingerprint must be registered in AGC
- */
-
-const PEER_FINGER_PRINT = "CFCC7E8B7AF0C5B2B488190B17B897BB483541B26A7F15065602D716E586FEDA"
-const PEER_PACKAGE_NAME = "com.minkiapps.android.livescore"
-
-var messageClient = new P2pClient();
+import { Message, Builder} from '../../wearengine/wearengine.js';
+import { MessageClient } from '../../wearengine/messageclient.js'
 
 export default {
 
@@ -25,9 +13,6 @@ export default {
     },
 
     onInit() {
-        messageClient.setPeerPkgName(PEER_PACKAGE_NAME)
-        messageClient.setPeerFingerPrint(PEER_FINGER_PRINT)
-
         this.initSportList()
         this.registerReceiver()
         this.ping()
@@ -57,14 +42,14 @@ export default {
                 console.log(message)
             },
         }
-        messageClient.registerReceiver(receiver)
+        MessageClient.registerReceiver(receiver)
     },
 
     ping() {
         var flash = this
         flash.ui_status = 0
         flash.loadingText = flash.$t('strings.connecting_to_phone')
-        messageClient.ping({
+        MessageClient.ping({
             onSuccess: function () {
                 console.log("ping phone success")
             },
@@ -92,11 +77,11 @@ export default {
         var flash = this
 
         var builderClient = new Builder();
-        builderClient.setDescription('Hello from GT3');
+        builderClient.setDescription('{ "command" : "COMM_HEALTH_CHECK" }');
         var sendMessage = new Message();
         sendMessage.builder = builderClient;
 
-        messageClient.send(sendMessage, {
+        MessageClient.send(sendMessage, {
             onSuccess: function () {
                 console.log("Message sent successfully")
             },

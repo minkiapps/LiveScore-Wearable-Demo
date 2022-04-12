@@ -1,4 +1,4 @@
-package com.minkiapps.android.livescore
+package com.minkiapps.android.livescore.wearengine
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
 import com.huawei.wearengine.HiWear
 import com.huawei.wearengine.client.ServiceConnectionListener
 import com.huawei.wearengine.client.WearEngineClient
@@ -16,9 +17,16 @@ import com.huawei.wearengine.p2p.Message
 import com.huawei.wearengine.p2p.P2pClient
 import com.huawei.wearengine.p2p.Receiver
 import com.huawei.wearengine.p2p.SendCallback
+import com.minkiapps.android.livescore.App
+import com.minkiapps.android.livescore.MainActivity
+import com.minkiapps.android.livescore.R
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
+import com.minkiapps.android.livescore.network.ApiService
 import com.minkiapps.android.livescore.prefs.AppPreferences
+import com.minkiapps.android.livescore.wearengine.model.COMM_GET_LIVE_EVENTS
+import com.minkiapps.android.livescore.wearengine.model.COMM_HEALTH_CHECK
+import com.minkiapps.android.livescore.wearengine.model.Communication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,9 +43,10 @@ class WearEngineService : Service(), LogListener {
         var device : Device? = null
 
         override fun onReceiveMessage(m: Message) {
-            emitDebugLog("Received message: ${String(m.data)}")
-            device?.let {
-                sendMessage(it, "Hello from Phone")
+            val msgString = String(m.data)
+            emitDebugLog("Received message: $msgString")
+            device?.let { d ->
+                processMessage(d, msgString)
             }
         }
     }
@@ -45,6 +54,8 @@ class WearEngineService : Service(), LogListener {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
+    private val gson : Gson by inject()
+    private val apiService : ApiService by inject()
     private val p2pClient: P2pClient by inject()
 
     private val wearEngineClient : WearEngineClient by lazy {
@@ -131,6 +142,25 @@ class WearEngineService : Service(), LogListener {
 
         // Notification ID cannot be 0.
         startForeground(ONGOING_NOTIFICATION_ID, notification)
+    }
+
+    private fun processMessage(device : Device, msgString : String) {
+        scope.launch {
+            try {
+                val comm = gson.fromJson(msgString, Communication::class.java)
+
+                when(comm.command) {
+                    COMM_HEALTH_CHECK -> {
+                        //noop
+                    }
+                    COMM_GET_LIVE_EVENTS -> {
+                        val wrapper = apiService.fetchLiveEvents(comm.intParam1)
+                    }
+                }
+            } catch (e : Exception) {
+                emitExceptionLog("Failed to process wearable message", e)
+            }
+        }
     }
 
     private fun sendMessage(device: Device, text: String) {
