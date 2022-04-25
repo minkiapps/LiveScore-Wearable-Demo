@@ -1,9 +1,13 @@
 {
   "strings": {
     "connecting_to_phone": "Connecting to phone...",
+    "loading_data": "Loading data...",
+    "loading_data_failed": "Failed to load data...",
+    "no_live_events": "Currently no live events",
     "retry": "Retry",
     "app_not_installed" : "App is not installed on phone, please scan qr code and install app",
     "failed_connecting_to_phone": "Failed connecting to phone, restart your phone app and try again",
+
 
     "sport_events" : "Sport Events",
     "football" : "Football",

@@ -23,6 +23,8 @@ import com.minkiapps.android.livescore.R
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.network.ApiService
+import com.minkiapps.android.livescore.network.model.Wrapper
+import com.minkiapps.android.livescore.network.model.formatStartedAt
 import com.minkiapps.android.livescore.prefs.AppPreferences
 import com.minkiapps.android.livescore.wearengine.model.COMM_GET_LIVE_EVENTS
 import com.minkiapps.android.livescore.wearengine.model.COMM_HEALTH_CHECK
@@ -33,6 +35,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.math.max
+import kotlin.math.min
 
 class WearEngineService : Service(), LogListener {
 
@@ -155,6 +161,13 @@ class WearEngineService : Service(), LogListener {
                     }
                     COMM_GET_LIVE_EVENTS -> {
                         val wrapper = apiService.fetchLiveEvents(comm.intParam1)
+                        //lets take only 20 to avoid OOM on the wearable site
+                        val minified = Wrapper(wrapper.data.subList(0,
+                            min(max(0, wrapper.data.size - 1), 20)
+                        ).map { it.copy(start_at = it.formatStartedAt()) })
+                        val jsonString = gson.toJson(minified)
+                        emitDebugLog("Sending message: $jsonString")
+                        sendMessage(device, jsonString)
                     }
                 }
             } catch (e : Exception) {
@@ -164,8 +177,13 @@ class WearEngineService : Service(), LogListener {
     }
 
     private fun sendMessage(device: Device, text: String) {
+        val file = File.createTempFile("temp", ".json", cacheDir)
+        FileOutputStream(file).use { out ->
+            out.write(text.toByteArray())
+        }
+
         val message = Message.Builder()
-            .setPayload(text.toByteArray())
+            .setPayload(file)
             .build()
 
         val sendCallback: SendCallback = object : SendCallback {
@@ -179,8 +197,10 @@ class WearEngineService : Service(), LogListener {
 
         p2pClient.send(device, message, sendCallback).addOnSuccessListener {
             emitDebugLog("Send message successful")
+            file.delete()
         }.addOnFailureListener {
             emitDebugLog("Send message failed")
+            file.delete()
         }
     }
 

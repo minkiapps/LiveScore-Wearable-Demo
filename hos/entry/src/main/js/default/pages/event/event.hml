@@ -1,5 +1,43 @@
-<div class="container">
-    <text class="title">
-        Hello {{ title }}
-    </text>
+<div class="container" onswipe="onSwipe">
+    <div if="{{ ui_status == 0 }}" class="container">
+
+        <image src="common/loading.png" ref="image" class="loader"></image>
+
+        <text class="loading_text">{{ $t('strings.loading_data') }}</text>
+
+    </div>
+
+    <div elif="{{ ui_status == 1 }}" class="container">
+        <text class="error_text">{{ errorText }}</text>
+
+        <text class="retry_text" onclick="fetchLiveEvents()">{{ $t('strings.retry') }}</text>
+    </div>
+
+    <list elif="{{ ui_status == 2 }}" class="container" ref="listRef">
+        <list-item style="width: 466px; height: 120px; flex-direction: row; align-items: center; justify-content: center;">
+            <image style="width : 64px; height : 64px;" ref="image" src="{{ sportLogo }}"></image>
+            <text style="text-align : center; margin-left : 24px;">
+                {{sportName}}
+            </text>
+        </list-item>
+        <list-item for="{{events}}" style="width: 466px; height: 220px; flex-direction: column;">
+            <text style="text-align: center; padding-left: 16px; padding-right: 16px;">
+                {{$item.name}}
+            </text>
+
+            <text style="color: #DF584D; font-size: 38px; text-align: center; padding-left: 16px; padding-right: 16px;">
+                {{formatDisplayString($item.home_score.display, $item.away_score.display)}}
+            </text>
+
+            <div style="width: 466px; height: 50px; flex-direction: row;">
+                <text style="width: 233px; text-align: left; padding-left: 32px;">
+                    {{$item.start_at}}
+                </text>
+                <text style="width: 233px; text-align: right; padding-right: 32px;">
+                    {{$item.status_more}}
+                </text>
+            </div>
+        </list-item>
+        <list-item style="height: 120px;"></list-item>
+    </list>
 </div>

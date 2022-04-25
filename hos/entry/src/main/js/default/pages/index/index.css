@@ -38,7 +38,6 @@
 
 .error_text {
     width: 400px;
-    font-size: 30px;
     text-align: center;
 }
 
@@ -50,6 +49,14 @@
     height: 64px;
     font-size: 30px;
     text-align: center;
+}
+
+.list_item_div {
+    width: 466px;
+    height: 100px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 @keyframes loader

@@ -1,4 +1,5 @@
-import { P2pClient } from './wearengine.js';
+import {P2pClient, Builder, Message} from './wearengine_minified.js';
+
 /**
  * precondition for wear engine to work
  *
@@ -11,3 +12,9 @@ const PEER_PACKAGE_NAME = "com.minkiapps.android.livescore"
 export var MessageClient = new P2pClient();
 MessageClient.setPeerPkgName(PEER_PACKAGE_NAME)
 MessageClient.setPeerFingerPrint(PEER_FINGER_PRINT)
+
+export {
+    P2pClient,
+    Builder,
+    Message
+};

@@ -17,6 +17,16 @@
       "moduleName": "entry",
       "moduleType": "entry"
     },
+    "distroFilter": {
+      "screenShape": {
+        "policy": "include",
+        "value": ["circle"]
+      },
+      "screenWindow": {
+        "policy": "include",
+        "value": ["454*454","466*466"]
+      }
+    },
     "abilities": [
       {
         "name": "default",

@@ -11,42 +11,37 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * Version: lite wearable 5.0.2.306
+ * Version: 5.0.2.300
  * Description: wearEngine SDK
  */
 
 import wearengine from "@system.wearengine";
 
 var WearEngineConst = {
-  DELAY_FILEAPP_VALUE: "internal://app/", // Default file storage path of third-party apps
-  DEFAULT_EMPTY_VALUE: "", // Default empty string
+  DELAY_FILEAPP_VALUE: "internal://app/", // 三方应用默认文件存储路径
+  DEFAULT_EMPTY_VALUE: "", // 默认空字符串
 };
 var ErrorCode = {
-  ERROR_CODE_INVALID_ARGUMENT: 5, // Invalid argument
-  ERROR_CODE_DEVICE_VERSION_NOT_SUPPORT: 13, // Device version is not supported
-  MSG_ERROR_PING_WATCH_APP_NOT_EXIST: 200, // App has not been installed on the wearable device
-  MSG_ERROR_PING_WATCH_APP_NOT_RUNNING: 201, // App has been installed but not opened
-  MSG_ERROR_PING_WATCH_APP_EXIST_RUNNING: 202, // App has been installed and opened。
-  MSG_ERROR_PING_OTHER: 203, // Other error
-  MSG_ERROR_PING_PHONE_APP_NOT_EXIST: 204, // App has not been installed on the phone
-  MSG_ERROR_PING_PHONE_APP_NOT_RUNNING: 205, // App has been installed on the phone
-  MSG_ERROR_SEND_FAIL: 206, // Failed to send the message
-  MSG_ERROR_SEND_SUCCESS: 207, // The message is sent successfully
-  MSG_ERROR_CODE_VERSION_TOO_LOW: 208 // The wearEngine version of the watch is too early
+  MSG_ERROR_PING_WATCH_APP_NOT_EXIST: 200, // 手表应用未安装。
+  MSG_ERROR_PING_WATCH_APP_NOT_RUNNING: 201, // 手表应用已安装未启动。
+  MSG_ERROR_PING_WATCH_APP_EXIST_RUNNING: 202, // 手表应用已安装已启动。
+  MSG_ERROR_PING_OTHER: 203, // 其他错误。
+  MSG_ERROR_PING_PHONE_APP_NOT_EXIST: 204, //手机应用未安装。
+  MSG_ERROR_PING_PHONE_APP_NOT_RUNNING: 205, // 手机应用已安装。
+  MSG_ERROR_SEND_FAIL: 206, // 发送消息失败。
+  MSG_ERROR_SEND_SUCCESS: 207, // 发送消息成功。
+  MSG_ERROR_CODE_VERSION_TOO_LOW: 208 // 手表wearEngine版本太低。
 };
 var MessageType = {
-  MESSAGE_TYPE_DATA: 0, // Text Messages
-  MESSAGE_TYPE_FILE: 1, // File Messages
-  MESSAGE_TYPE_OFFLINE_MSG: 2 // Offline Messages
+  MESSAGE_TYPE_DATA: 0, // 文本消息
+  MESSAGE_TYPE_FILE: 1 // 文件消息
 };
 
 var WEARENGINE_SERVICE_VISION_302 = 302;
 var WEARENGINE_SERVICE_VISION_303 = 303;
-var WEARENGINE_SERVICE_VISION_401 = 401;
 var WEARENGINE_SDK_VERSION = "3";
 var FILE_PUNLIC_PATH_INTERCETPED = 15;
 var DEFAULT_EMPTY_FINGERPRINT = " ";
-var isTransferring = false;
 
 var P2pClient = (function() {
   var peerPkgName;
@@ -76,7 +71,7 @@ var P2pClient = (function() {
     }
   }
   /**
-   * Set the package name of the phone app
+   * 设置手机应用的packageName
    * peerPkgName: string
    */
   P2pClient.prototype.setPeerPkgName = function(peerPkgName) {
@@ -98,7 +93,7 @@ var P2pClient = (function() {
     });
   };
   /**
-   * Set the app fingerprint information on the phone
+   * 设置手机侧指纹信息
    * fingerPrint: string
    */
   P2pClient.prototype.setPeerFingerPrint = function(fingerPrint) {
@@ -128,7 +123,7 @@ var P2pClient = (function() {
     });
   };
   /**
-   * Check whether the specified application has been installed on the peer device
+   * 检测对端设备侧是否已经安装指定应用
    * pingCallback: object:onSuccess(),onFailure(),onPingResult(resultCode)
    */
   P2pClient.prototype.ping = function(pingCallback) {
@@ -164,33 +159,18 @@ var P2pClient = (function() {
       }
       console.error("ping failed.");
     };
-
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
-      wearengine.detect({
-        bundleName: this.peerPkgName,
-        success: successCallBack,
-        fail: failCallBack
-      });
-    } else {
-      FeatureAbility.detect({
-        bundleName: this.peerPkgName,
-        success: successCallBack,
-        fail: failCallBack
-      });
-    }
+    FeatureAbility.detect({
+      bundleName: this.peerPkgName,
+      success: successCallBack,
+      fail: failCallBack
+    });
   };
   /**
-   * Register message listener
+   * 注册消息监听接口
    * receiver：object:onSuccess(),onFailure(),onReceiveMessage(message)
    */
   P2pClient.prototype.registerReceiver = function(receiver) {
     if (!receiver) {
-      receiver.onReceiveMessage(
-        {
-          isFileType: false,
-          message: "receiver is null",
-        }
-      );
       return;
     }
     if (this.version > WEARENGINE_SERVICE_VISION_302) {
@@ -238,21 +218,14 @@ var P2pClient = (function() {
         receiver.onSuccess();
       }
     };
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
-      wearengine.unsubscribeMsg();
-      wearengine.subscribeMsg({
-        success: successCallBack,
-        fail: receiver.onFailure
-      });
-    } else {
-      FeatureAbility.subscribeMsg({
-        success: successCallBack,
-        fail: receiver.onFailure
-      });
-    }
+
+    FeatureAbility.subscribeMsg({
+      success: successCallBack,
+      fail: receiver.onFailure
+    });
   };
   /**
-   * Send messages
+   * 发送消息接口
    * message: Message
    * sendCallback: object:onSuccess(),onFailure(),onSendResult(resultCode),onSendProgress(count)
    * resultCode: SUCCESS 207, FAILURE 206
@@ -295,25 +268,14 @@ var P2pClient = (function() {
         sendCallback.onSendProgress(0 + "%");
         console.error("send message failed.");
       };
-      if (this.version >= WEARENGINE_SERVICE_VISION_401) {
-        wearengine.sendMsg({
-          deviceId: "remote",
-          bundleName: this.peerPkgName,
-          abilityName: "",
-          message: message.getData(),
-          success: successCallBack,
-          fail: failCallBack
-        });
-      } else {
-        FeatureAbility.sendMsg({
-          deviceId: "remote",
-          bundleName: this.peerPkgName,
-          abilityName: "",
-          message: message.getData(),
-          success: successCallBack,
-          fail: failCallBack
-        });
-      }
+      FeatureAbility.sendMsg({
+        deviceId: "remote",
+        bundleName: this.peerPkgName,
+        abilityName: "",
+        message: message.getData(),
+        success: successCallBack,
+        fail: failCallBack
+      });
     } else {
       if (this.version < WEARENGINE_SERVICE_VISION_302) {
         console.info("not support send file");
@@ -327,7 +289,7 @@ var P2pClient = (function() {
       }
 
       var fileName = message.getFile().name;
-      // Service version earlier than 303 does not support the internal://app/ directory
+      // service 版本 303以下不支持 "internal://app/" 路径
       if (this.version < WEARENGINE_SERVICE_VISION_303) {
         var TempPath = fileName.substring(0, FILE_PUNLIC_PATH_INTERCETPED);
         if (TempPath == WearEngineConst.DELAY_FILEAPP_VALUE) {
@@ -348,8 +310,6 @@ var P2pClient = (function() {
         };
         sendCallback.onSuccess();
         sendCallback.onSendResult(successCode);
-        console.info("send file success.");
-        isTransferring = false;
       };
 
       var failCallBack = function(errorMessage, code) {
@@ -359,16 +319,7 @@ var P2pClient = (function() {
         };
         sendCallback.onFailure();
         sendCallback.onSendResult(failCode);
-        console.info("send file failed.");
-        isTransferring = false;
       };
-      if (isTransferring) {
-        console.error("send file failed,there is already a file being sent.");
-        failCallBack();
-        return;
-      }
-      isTransferring = true;
-
       var progressCallBack = function(data) {
         sendCallback.onSendProgress(data.progressNum + "%");
         console.info("progress of sending file: " + data.progressNum + "%");
@@ -385,19 +336,15 @@ var P2pClient = (function() {
     }
   };
   /**
-   * Deregister message listener
+   * 注销监听接口
    * receiver: onSuccess()
    */
   P2pClient.prototype.unregisterReceiver = function(receiver) {
-    if (this.version >= WEARENGINE_SERVICE_VISION_401) {
-      wearengine.unsubscribeMsg();
-    } else {
-      FeatureAbility.unsubscribeMsg();
-    }
+    FeatureAbility.unsubscribeMsg();
     receiver.onSuccess();
   };
   /**
-   * Check whether the parameter is empty
+   * 判断参数是否为空
    * parameter: string
    */
   function isEmpty(parameter) {
@@ -407,7 +354,7 @@ var P2pClient = (function() {
 })();
 
 /**
- * File format type
+ * 文件格式类型
  * name: file name with path
  * mode: 'text' or 'binary'
  * mode2: 'R', 'W', 'RW'
@@ -432,9 +379,9 @@ var Builder = (function() {
       this.messageType = MessageType.MESSAGE_TYPE_DATA;
   };
   /**
-   * Set the message information (either of the two formats)
+   * 设置messge信息（两种格式任选其一）
    * data: ArrayBuffer
-   * data: File（Not supported currently）
+   * data: File（暂时不支持）
    */
   Builder.prototype.setPayload = function(data) {
       if (!data) {
@@ -466,7 +413,7 @@ var Message = (function() {
     return this.builder.messageInfo;
   };
   /**
-   * Get information during transmission
+   * 获取传送时的信息
    */
   Message.prototype.getData = function() {
     return this.builder.messageInfo;
@@ -475,7 +422,7 @@ var Message = (function() {
     return this.builder.messageInfo;
   };
   /**
-   * Get File Information
+   * 获取文件信息
    */
   Message.prototype.getFile = function() {
     if (this.builder.messageType == MessageType.MESSAGE_TYPE_FILE) {
@@ -484,7 +431,7 @@ var Message = (function() {
     return null;
   };
   /**
-   * Get the transmission data type
+   * 获取传输数据类型
    * 0 string
    * 1 File
    */
@@ -494,71 +441,4 @@ var Message = (function() {
   return Message;
 })();
 
-var PeerDeviceClient = (function () {
-  var version;
-  function PeerDeviceClient() {
-    try {
-      var jsSdk = this;
-      var getVersionCallBack = function(data) {
-        if (data) {
-          var versionArray = data.split(".");
-          jsSdk.version = versionArray[versionArray.length - 1];
-          console.info("service sdk version is: " + data);
-        } else {
-          jsSdk.version = 0;
-          console.info("get service sdk version failed");
-        }
-      };
-      wearengine.getWearEngineVersion({
-        complete: getVersionCallBack,
-        sdkVersion: WEARENGINE_SDK_VERSION
-      });
-    } catch (error) {
-      jsSdk.version = 0;
-      console.info("service sdk version is too low" + error.message);
-    }
-  }
-
- /**
-   * Get the peer device object
-   * sendCallback: object:onSuccess(data),onFailure(data)
-   */
-  PeerDeviceClient.prototype.getPeerDevice = function (peerDeviceCallback) {
-    if (!peerDeviceCallback) {
-      console.error("getPeerDevice peerDeviceCallback is null");
-      var obj = {
-        data: "ERROR_CODE_INVALID_ARGUMENT",
-        errorCode: ErrorCode.ERROR_CODE_INVALID_ARGUMENT
-      };
-      return obj;
-    }
-
-    if (this.version < WEARENGINE_SERVICE_VISION_401) {
-      console.error("getPeerDevice wearengine service verison is low");
-      var obj = {
-        data: "ERROR_CODE_DEVICE_VERSION_NOT_SUPPORT",
-        errorCode: ErrorCode.ERROR_CODE_DEVICE_VERSION_NOT_SUPPORT
-      };
-      peerDeviceCallback.onFailure(obj);
-      return;
-    }
-
-    var successCallBack = function(data) {
-      peerDeviceCallback.onSuccess(data);
-    };
-    var failCallBack = function(data) {
-      peerDeviceCallback.onFailure(data);
-    };
-
-    wearengine.getPeerDevice({
-      success: successCallBack,
-      fail: failCallBack
-    });
-
-    return;
-  };
-
-  return PeerDeviceClient;
-})();
-
-export { P2pClient, Message, Builder, PeerDeviceClient };
+export { P2pClient, Message, Builder };

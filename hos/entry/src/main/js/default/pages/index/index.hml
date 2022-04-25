@@ -1,6 +1,6 @@
 <div class="container" onswipe="onSwipe">
 
-    <div if="{{ui_status == 0}}" class="container">
+    <div if="{{ ui_status == 0 }}" class="container">
 
         <image src="common/loading.png" ref="image" class="loader"></image>
 
@@ -10,29 +10,27 @@
 
     </div>
 
-    <div elif="{{ui_status == 1}}" class="container">
+    <div elif="{{ ui_status == 1 }}" class="container">
         <text class="error_text">
-            {{errorText}}
+            {{ errorText }}
         </text>
 
         <text class="retry_text" onclick="ping()">{{ $t('strings.retry') }}</text>
     </div>
 
-    <div elif="{{ui_status == 2}}" class="container">
-        <list class="container">
-            <list-item style="width: 466px; height: 112px;">
-                <text class="title">{{$t('strings.sport_events')}}</text>
-            </list-item>
-            <list-item for="{{sport_list}}" style="width: 466px; height: 100px;">
-                <div style="flex-direction: row; width: 466px; height: 100px; align-items: center; justify-content: center;">
-                    <image style="width: 64px; height: 64px;" ref="image" src="{{$item.logo}}"></image>
-                    <text style="text-align: center; margin-left: 24px;">
-                        {{$item.name}}
-                    </text>
-                </div>
-            </list-item>
-            <list-item style="height: 60px;"></list-item>
-        </list>
-    </div>
+    <list elif="{{ ui_status == 2 }}" class="container" ref="listRef">
+        <list-item style="width : 466px; height : 112px;">
+            <text class="title">{{ $t('strings.sport_events') }}</text>
+        </list-item>
+        <list-item for="{{ sport_list }}" style="width : 466px; height : 100px;">
+            <div class="list_item_div" onclick="gotoLiveEvents({{ $item.type }})">
+                <image style="width : 64px; height : 64px;" ref="image" src="{{ $item.logo }}"></image>
+                <text style="text-align : center; margin-left : 24px;">
+                    {{ $item.name }}
+                </text>
+            </div>
+        </list-item>
+        <list-item style="height : 60px;"></list-item>
+    </list>
 
 </div>
