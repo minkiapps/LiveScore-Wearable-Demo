@@ -19,10 +19,10 @@
     </div>
 
     <list elif="{{ ui_status == 2 }}" class="container" ref="listRef">
-        <list-item style="width : 466px; height : 112px;">
+        <list-item style="height : 112px;">
             <text class="title">{{ $t('strings.sport_events') }}</text>
         </list-item>
-        <list-item for="{{ sport_list }}" style="width : 466px; height : 100px;">
+        <list-item for="{{ sport_list }}" style="width : 100%; height : 100px;">
             <div class="list_item_div" onclick="gotoLiveEvents({{ $item.type }})">
                 <image style="width : 64px; height : 64px;" ref="image" src="{{ $item.logo }}"></image>
                 <text style="text-align : center; margin-left : 24px;">

@@ -1,36 +1,31 @@
 .container {
-    display: flex;
     justify-content: center;
     align-items: center;
-    width: 466px;
-    height: 466px;
+    width: 100%;
+    height: 100%;
     flex-direction: column;
 }
 
 .list_item_div {
-    width: 466px;
+    width: 100%;
     height: 240px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.title {
-    font-size: 30px;
-    text-align: center;
-    width: 466px;
-    height: 466px;
-}
-
 .error_text {
-    width: 400px;
+    width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
     text-align: center;
 }
 
 .loading_text {
     margin-top: 16px;
-    width: 400px;
-    font-size: 30px;
+    width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
     text-align: center;
 }
 

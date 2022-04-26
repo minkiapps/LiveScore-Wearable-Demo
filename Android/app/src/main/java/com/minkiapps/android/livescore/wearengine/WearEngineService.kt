@@ -26,9 +26,7 @@ import com.minkiapps.android.livescore.network.ApiService
 import com.minkiapps.android.livescore.network.model.Wrapper
 import com.minkiapps.android.livescore.network.model.formatStartedAt
 import com.minkiapps.android.livescore.prefs.AppPreferences
-import com.minkiapps.android.livescore.wearengine.model.COMM_GET_LIVE_EVENTS
-import com.minkiapps.android.livescore.wearengine.model.COMM_HEALTH_CHECK
-import com.minkiapps.android.livescore.wearengine.model.Communication
+import com.minkiapps.android.livescore.wearengine.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -161,12 +159,19 @@ class WearEngineService : Service(), LogListener {
                     }
                     COMM_GET_LIVE_EVENTS -> {
                         val wrapper = apiService.fetchLiveEvents(comm.intParam1)
-                        //lets take only 20 to avoid OOM on the wearable site
+
+                        //lets take only max 25 to avoid OOM on the wearable site
+                        val maxItems = when(comm.model) {
+                            MODEL_GT2_PRO -> 10
+                            MODEL_GT3, MODEL_GT3PRO -> 25
+                            else -> 10
+                        }
+
                         val minified = Wrapper(wrapper.data.subList(0,
-                            min(max(0, wrapper.data.size - 1), 20)
+                            min(max(0, wrapper.data.size - 1), maxItems)
                         ).map { it.copy(start_at = it.formatStartedAt()) })
                         val jsonString = gson.toJson(minified)
-                        emitDebugLog("Sending message: $jsonString")
+                        Timber.d("Sending message: $jsonString")
                         sendMessage(device, jsonString)
                     }
                 }

@@ -128,7 +128,7 @@ export default {
         flash.ui_status = 0
 
         var builderClient = new Builder();
-        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "intParam1" : ${this.sportType} }`);
+        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "model" : "gt2pro", "intParam1" : ${this.sportType} }`);
         var sendMessage = new Message();
         sendMessage.builder = builderClient;
 

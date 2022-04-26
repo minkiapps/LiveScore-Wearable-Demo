@@ -4,7 +4,7 @@ import router from '@system.router';
 
 export default {
     data: {
-        ui_status: 2, //0 loading, 1 error, 2 loaded
+        ui_status: 0, //0 loading, 1 error, 2 loaded
         sportType: 1,
         errorText: '',
         sportName: '',
@@ -137,7 +137,7 @@ export default {
         flash.ui_status = 0
 
         var builderClient = new Builder();
-        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "intParam1" : ${this.sportType} }`);
+        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "model" : "gt3", "intParam1" : ${this.sportType} }`);
         var sendMessage = new Message();
         sendMessage.builder = builderClient;
 
@@ -174,10 +174,7 @@ export default {
                 console.log(`Event page: received message: ${message.name}`)
 
                 if (message && message.isFileType) {
-                    //need some time delay for GT2 Pro to work
-                    setTimeout(() => {
-                        flash.parseJSON(message)
-                    }, 2000)
+                    flash.parseJSON(message)
                 }
             },
         }
