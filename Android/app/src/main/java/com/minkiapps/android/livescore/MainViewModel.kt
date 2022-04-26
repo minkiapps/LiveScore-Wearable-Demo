@@ -16,6 +16,8 @@ import com.minkiapps.android.livescore.extensions.suspendRequestPermissions
 import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
+import com.minkiapps.android.livescore.wearengine.WearEngineService
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -37,6 +39,10 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
     private val startWearEngineServiceLiveData = MutableLiveData<Device>()
 
     fun getStartWearEngineServiceLiveData() : LiveData<Device> = startWearEngineServiceLiveData
+
+    private val logDisposable : Disposable = WearEngineService.logRelay.subscribe {
+        addLog(it)
+    }
 
     /**
      * check if there is available device
@@ -125,5 +131,10 @@ class MainViewModel : ViewModel(), KoinComponent, LogListener {
 
     fun clearLogs() {
         logs.value = listOf()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        logDisposable.dispose()
     }
 }

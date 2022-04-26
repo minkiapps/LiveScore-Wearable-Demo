@@ -17,11 +17,14 @@ import com.huawei.wearengine.p2p.Message
 import com.huawei.wearengine.p2p.P2pClient
 import com.huawei.wearengine.p2p.Receiver
 import com.huawei.wearengine.p2p.SendCallback
+import com.jakewharton.rxrelay3.PublishRelay
 import com.minkiapps.android.livescore.App
 import com.minkiapps.android.livescore.MainActivity
 import com.minkiapps.android.livescore.R
 import com.minkiapps.android.livescore.extensions.await
 import com.minkiapps.android.livescore.log.LogListener
+import com.minkiapps.android.livescore.log.LogModel
+import com.minkiapps.android.livescore.log.Type
 import com.minkiapps.android.livescore.network.ApiService
 import com.minkiapps.android.livescore.network.model.Wrapper
 import com.minkiapps.android.livescore.network.model.formatStartedAt
@@ -75,7 +78,6 @@ class WearEngineService : Service(), LogListener {
         })
     }
 
-    var logListener : LogListener? = null
     private var receiver = ReceiverImpl()
 
     override fun onCreate() {
@@ -95,7 +97,7 @@ class WearEngineService : Service(), LogListener {
             startForeground(d.name)
             scope.launch {
                 try {
-                    if(receiver.device == null) {
+                    if(receiver.device != null) {
                         emitDebugLog("Unregister receiver for device: ${receiver.device?.name}")
                         p2pClient.unregisterReceiver(receiver).await()
                     }
@@ -172,6 +174,7 @@ class WearEngineService : Service(), LogListener {
                         ).map { it.copy(start_at = it.formatStartedAt()) })
                         val jsonString = gson.toJson(minified)
                         Timber.d("Sending message: $jsonString")
+                        emitDebugLog("Sending message length: ${jsonString.length}")
                         sendMessage(device, jsonString)
                     }
                 }
@@ -222,33 +225,30 @@ class WearEngineService : Service(), LogListener {
     override fun emitDebugLog(log: String) {
         Timber.d(log)
         appPreferences.addServiceLog(log)
-        logListener?.emitDebugLog(log)
+        logRelay.accept(LogModel(Type.DEBUG, log))
     }
 
     override fun emitFlashyLog(log: String) {
         Timber.w(log)
         appPreferences.addServiceLog(log)
-        logListener?.emitFlashyLog(log)
+        logRelay.accept(LogModel(Type.FLASHY, log))
     }
 
     override fun emitExceptionLog(log: String, e: Exception) {
         Timber.e(log, e.message)
         appPreferences.addServiceLog("$log Exception message: ${e.message}")
-        logListener?.emitExceptionLog(log, e)
+        logRelay.accept(LogModel(Type.ERROR, "$log Exception message: ${e.message}"))
     }
 
     companion object {
-
-        //why I use this static variable hack instead of binder because unbind service on Activity
-        // brings on some devices to Service to restart, which is undesirable,
-        //also broadcast receiver seems to bring Service to restart
-
-        //https://stackoverflow.com/questions/33267793/android-service-closes-after-unbind
-
-        var logListener : LogListener? = null
-
         const val EXTRA_DEVICE = "EXTRA_DEVICE"
 
         private const val ONGOING_NOTIFICATION_ID = 10001
+
+        //why I use rxrelay instead of binder because unbind service on Activity
+        // brings on some devices to Service to restart, which is undesirable,
+        //also broadcast receiver seems to bring Service to restart
+        //https://stackoverflow.com/questions/33267793/android-service-closes-after-unbind
+        val logRelay = PublishRelay.create<LogModel>()
     }
 }

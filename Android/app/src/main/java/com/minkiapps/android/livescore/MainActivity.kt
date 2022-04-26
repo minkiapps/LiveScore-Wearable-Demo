@@ -90,15 +90,8 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, WearEngineService::class.java).apply {
                 putExtra(EXTRA_DEVICE, it)
             }
-            WearEngineService.logListener = mainViewModel
-
             startService(intent)
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        WearEngineService.logListener = null
     }
 }
 
