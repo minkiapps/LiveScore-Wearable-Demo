@@ -1,1 +1,1 @@
-include ':entry'
+include ':gt2',':gt3'

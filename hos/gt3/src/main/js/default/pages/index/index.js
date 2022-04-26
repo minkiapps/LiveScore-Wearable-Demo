@@ -1,5 +1,5 @@
 import router from '@system.router';
-import { MessageClient, Message, Builder } from '../../wearengine/messageclient.js'
+import { MessageClient, Message, Builder } from '../../../../../../../wearengine/messageclient.js'
 
 export default {
 

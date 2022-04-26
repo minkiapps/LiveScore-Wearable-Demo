@@ -1,0 +1,48 @@
+{
+  "app": {
+    "bundleName": "com.minkiapps.hos.livescore",
+    "vendor": "minkiapps",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    }
+  },
+  "deviceConfig": {},
+  "module": {
+    "deviceType": [
+      "liteWearable"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "gt2",
+      "moduleType": "entry"
+    },
+    "distroFilter": {
+      "screenShape": {
+        "policy": "include",
+        "value": ["circle"]
+      },
+      "screenWindow": {
+        "policy": "include",
+        "value": ["454*454"]
+      }
+    },
+    "abilities": [
+      {
+        "name": "default",
+        "icon": "$media:icon",
+        "label": "$string:entry_MainAbility",
+        "type": "page"
+      }
+    ],
+    "js": [
+      {
+        "pages": [
+          "pages/index/index",
+          "pages/event/event"
+        ],
+        "name": "default"
+      }
+    ]
+  }
+}

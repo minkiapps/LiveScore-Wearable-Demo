@@ -14,7 +14,7 @@
     ],
     "distro": {
       "deliveryWithInstall": true,
-      "moduleName": "entry",
+      "moduleName": "gt3",
       "moduleType": "entry"
     },
     "distroFilter": {
@@ -24,7 +24,7 @@
       },
       "screenWindow": {
         "policy": "include",
-        "value": ["454*454","466*466"]
+        "value": ["466*466"]
       }
     },
     "abilities": [

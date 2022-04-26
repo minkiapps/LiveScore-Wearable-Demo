@@ -6,7 +6,6 @@
 /build
 /captures
 .externalNativeBuild
-/entry/.preview
 .cxx
 /node_modules
 /signing

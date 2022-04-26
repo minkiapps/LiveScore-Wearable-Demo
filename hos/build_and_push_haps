@@ -1,5 +1,9 @@
 #!/bin/bash
 
-./gradlew clean assembleDebug
+./gradlew clean assembleDebug --parallel
 
-for d in $(adb devices | sed 1d | sed 's/device//g'); do adb -s $d shell 'mkdir /sdcard/haps'; adb -s $d push entry/build/outputs/hap/debug/entry-bin-debug-lite-signed.hap /sdcard/haps; done
+for d in $(adb devices | sed 1d | sed 's/device//g'); do
+  adb -s $d shell 'mkdir /sdcard/haps';
+  adb -s $d push gt2/build/outputs/hap/debug/gt2-bin-debug-lite-signed.hap /sdcard/haps;
+  adb -s $d push gt3/build/outputs/hap/debug/gt3-bin-debug-lite-signed.hap /sdcard/haps;
+  done

@@ -1,5 +1,5 @@
 import file from '@system.file';
-import {MessageClient, Builder, Message} from '../../wearengine/messageclient.js';
+import {MessageClient, Builder, Message} from '../../../../../../../wearengine/messageclient.js';
 import router from '@system.router';
 
 export default {
@@ -115,16 +115,7 @@ export default {
         }
     },
 
-    onShow() {
-        this.$refs.listRef.rotation({
-            focus: true
-        })
-    },
-
     onDestroy() {
-        this.$refs.listRef.rotation({
-            focus: false
-        })
         MessageClient.unregisterReceiver({
             onSuccess: function () {
                 console.log("Event page unregister receiver successful")
@@ -177,7 +168,7 @@ export default {
                     //need some time delay for GT2 Pro to work
                     setTimeout(() => {
                         flash.parseJSON(message)
-                    }, 2000)
+                    }, 1000)
                 }
             },
         }
@@ -197,9 +188,6 @@ export default {
 
                     if(flash.events.length != 0) {
                         flash.ui_status = 2
-                        flash.$refs.listRef.rotation({
-                            focus: true
-                        }) //refocus after list is invalidated
                     } else {
                         flash.ui_status = 1
                         flash.errorText = flash.$t('strings.no_live_events')

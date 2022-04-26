@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 454px;
+    height: 454px;
+    flex-direction: column;
+}
+
+.list_item_div {
+    width: 454px;
+    height: 240px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.error_text {
+    width: 400px;
+    text-align: center;
+}
+
+.loading_text {
+    margin-top: 16px;
+    width: 400px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.loader {
+    width: 64px;
+    height: 64px;
+    animation-duration: 1500ms;
+    animation-iteration-count:infinite;
+    animation-fill-mode:forwards;
+    animation-name: loader;
+}
+
+.retry_text {
+    background-color: dodgerblue;
+    border-radius: 32px;
+    width: 240px;
+    height: 64px;
+    margin-top: 16px;
+    padding-top: 16px; /** need this for gt2 **/
+    text-align: center;
+}
+
+@keyframes loader
+{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

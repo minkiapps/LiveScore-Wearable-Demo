@@ -1,0 +1,19 @@
+{
+  "strings": {
+    "connecting_to_phone": "连接手机 。。。",
+    "loading_data": "加载数据...",
+    "loading_data_failed": "加载数据失败...",
+    "no_live_events": "目前没有体育赛事",
+    "retry": "重试",
+    "app_not_installed" : "手机应用没有安装，请扫码安装",
+    "failed_connecting_to_phone": "链接手机应用失败，请从启动应用重试",
+
+    "sport_events" : "体育赛事",
+    "football" : "足球",
+    "tennis" : "网球",
+    "basketball" : "篮球",
+    "hockey" : "曲棍球",
+    "volleyball" : "排球",
+    "handball" : "手球"
+  }
+}
