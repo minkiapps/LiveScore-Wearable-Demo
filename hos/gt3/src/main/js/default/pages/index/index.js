@@ -95,6 +95,7 @@ export default {
                     flash.errorText = flash.$t('strings.failed_connecting_to_phone')
                 } else {
                     flash.ui_status = 2
+                    flash.$refs.listRef.rotation({ focus : true})
                 }
             },
             onSendProgress: function (count) {
