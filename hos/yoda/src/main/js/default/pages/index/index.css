@@ -24,6 +24,10 @@
 }
 
 .loading_text {
+    width: 100%;
+    text-align: center;
+    padding-left: 8px;
+    padding-right: 8px;
     margin-top: 16px;
 }
 
@@ -35,8 +39,8 @@
 
 .error_text {
     width: 100%;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 8px;
+    padding-right: 8px;
     text-align: center;
 }
 

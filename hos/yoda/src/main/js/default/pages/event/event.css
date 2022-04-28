@@ -16,16 +16,16 @@
 
 .error_text {
     width: 100%;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 8px;
+    padding-right: 8px;
     text-align: center;
 }
 
 .loading_text {
     margin-top: 16px;
     width: 100%;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 8px;
+    padding-right: 8px;
     text-align: center;
 }
 
