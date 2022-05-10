@@ -3,9 +3,23 @@ apply plugin: 'com.huawei.ohos.app'
 
 //For instructions on signature configuration, see https://developer.harmonyos.com/cn/docs/documentation/doc-guides/ide_debug_device-0000001053822404#section1112183053510
 ohos {
-    compileSdkVersion 7
+    signingConfigs {
+        debug {
+            storeFile file('signing/minkiapps.p12')
+            storePassword '000000181BCEC2BE8D7FF2D8977A6F90C55717E04BE33B3CCB4AC1DEED5BF37AA5E2DB115F79BCAF'
+            keyAlias = 'minkiapps'
+            keyPassword '00000018551E5967449B723A2E30333F0ED012902B7496B14E1D1DE15C65D27F4D19E1180FC2183D'
+            signAlg = 'SHA256withECDSA'
+            profile file('signing/allDebug.p7b')
+            certpath file('signing/minkiapps.cer')
+        }
+    }
+    compileSdkVersion 6
+    defaultConfig {
+        compatibleSdkVersion 3
+    }
 }
-	
+
 buildscript {
     repositories {
         maven {

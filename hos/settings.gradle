@@ -1,1 +1,1 @@
-include ':gt2',':gt3', 'yoda'
+include ':gt2', ':gt3', ':watch3', 'yoda'
