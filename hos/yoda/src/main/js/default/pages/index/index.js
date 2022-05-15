@@ -21,12 +21,7 @@ export default {
         }
     },
 
-    onShow() {
-        this.$refs.listRef.rotation({ focus : true})
-    },
-
     onDestroy() {
-        this.$refs.listRef.rotation({ focus : false})
         MessageClient.unregisterReceiver({
             onSuccess: function () {
                 console.log("Index page: unregister receiver successful")
@@ -95,7 +90,6 @@ export default {
                     flash.errorText = flash.$t('strings.failed_connecting_to_phone')
                 } else {
                     flash.ui_status = 2
-                    flash.$refs.listRef.rotation({ focus : true})
                 }
             },
             onSendProgress: function (count) {

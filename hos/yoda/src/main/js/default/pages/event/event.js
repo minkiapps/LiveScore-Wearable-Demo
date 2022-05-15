@@ -4,7 +4,7 @@ import router from '@system.router';
 
 export default {
     data: {
-        ui_status: 0, //0 loading, 1 error, 2 loaded
+        ui_status: -1, //0 loading, 1 error, 2 loaded
         sportType: 1,
         errorText: '',
         sportName: '',
@@ -115,16 +115,7 @@ export default {
         }
     },
 
-    onShow() {
-        this.$refs.listRef.rotation({
-            focus: true
-        })
-    },
-
     onDestroy() {
-        this.$refs.listRef.rotation({
-            focus: false
-        })
         MessageClient.unregisterReceiver({
             onSuccess: function () {
                 console.log("Event page unregister receiver successful")
@@ -137,7 +128,7 @@ export default {
         flash.ui_status = 0
 
         var builderClient = new Builder();
-        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "model" : "gt3", "intParam1" : ${this.sportType} }`);
+        builderClient.setDescription(`{ "command" : "COMM_GET_LIVE_EVENTS", "model" : "yoda", "intParam1" : ${this.sportType} }`);
         var sendMessage = new Message();
         sendMessage.builder = builderClient;
 
@@ -194,9 +185,6 @@ export default {
 
                     if(flash.events.length != 0) {
                         flash.ui_status = 2
-                        flash.$refs.listRef.rotation({
-                            focus: true
-                        }) //refocus after list is invalidated
                     } else {
                         flash.ui_status = 1
                         flash.errorText = flash.$t('strings.no_live_events')

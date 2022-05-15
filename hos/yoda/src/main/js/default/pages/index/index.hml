@@ -19,7 +19,7 @@
     </div>
 
     <list elif="{{ ui_status == 2 }}" class="container" ref="listRef">
-        <list-item style="height : 112px;">
+        <list-item style="height : 60px;">
             <text class="title">{{ $t('strings.sport_events') }}</text>
         </list-item>
         <list-item for="{{ sport_list }}" style="width : 100%; height : 100px;">

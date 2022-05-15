@@ -20,8 +20,8 @@
                 {{sportName}}
             </text>
         </list-item>
-        <list-item for="{{events}}" style="width: 100%; height: 220px; flex-direction: column;">
-            <text style="text-align: center; padding-left: 16px; padding-right: 16px;">
+        <list-item for="{{events}}" style="width: 100%; height: 280px; flex-direction: column;">
+            <text style="text-align: center; padding-left: 4px; padding-right: 4px;">
                 {{$item.name}}
             </text>
 
@@ -30,14 +30,13 @@
             </text>
 
             <div style="width: 100%; height: 50px; flex-direction: row;">
-                <text style="width: 50%; text-align: left; padding-left: 16px;">
+                <text style="width: 50%; text-align: left; padding-left: 4px;">
                     {{$item.start_at}}
                 </text>
-                <text style="width: 50%; text-align: right; padding-right: 16px;">
+                <text style="width: 50%; text-align: right; padding-right: 4px;">
                     {{$item.status_more}}
                 </text>
             </div>
         </list-item>
-        <list-item style="height: 120px;"></list-item>
     </list>
 </div>
