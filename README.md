@@ -8,9 +8,10 @@ The Android app is responsible to make the API call and transfer the result via 
 Jetpack Compose. The main mechanic is to start a Foreground Service which maintains the Wearengine connection between phone and watch, whenever the watch app 
 is requesting data, the Foreground Service fetches the data through API and transfer a JSON to watch.
 
-### HarmonyOS
+### HarmonyOS (hos)
 The HarmonyOS app is responsible of displaying the live score data which is received from the Android app in a list UI element. 
-Various wearable device models are supported in the project, each device model code is encapsulated in a own Gradle module.
+Various wearable device models are supported in the project, each device model code is encapsulated in a own Gradle module. All code are 
+written in Javascript, HML and CSS. 
 
 - Huawei Sportwatch (Litewearable)
   - Watch GT2 Pro
