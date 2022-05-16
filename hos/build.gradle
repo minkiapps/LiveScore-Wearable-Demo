@@ -10,7 +10,7 @@ ohos {
             keyAlias = 'minkiapps'
             keyPassword '00000018551E5967449B723A2E30333F0ED012902B7496B14E1D1DE15C65D27F4D19E1180FC2183D'
             signAlg = 'SHA256withECDSA'
-            profile file('signing/allDebug.p7b')
+            profile file('signing/minkiDebug.p7b') //max 10 UIDs for litewearables
             certpath file('signing/minkiapps.cer')
         }
     }

@@ -6,6 +6,8 @@ const val COMM_GET_LIVE_EVENTS = "COMM_GET_LIVE_EVENTS"
 const val MODEL_GT2_PRO = "gt2pro"
 const val MODEL_GT3 = "gt3"
 const val MODEL_GT3PRO = "gt3pro"
+const val MODEL_YODA = "yoda"
+const val MODEL_WATCH3 = "watch3"
 
 class Communication(val command : String,
                     val model : String,

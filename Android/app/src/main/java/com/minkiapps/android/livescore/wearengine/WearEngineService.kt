@@ -162,10 +162,18 @@ class WearEngineService : Service(), LogListener {
                     COMM_GET_LIVE_EVENTS -> {
                         val wrapper = apiService.fetchLiveEvents(comm.intParam1)
 
-                        //lets take only max 25 to avoid OOM on the wearable site
+                        //limit items to avoid OOM on the wearable site
+
+                        //GT2 Pro has 32KB RAM for each app
+                        //GT3 and Yoda have 48KB RAM for each app
+                        //GT3 Pro has 64KB RAM for each app
+                        //Watch3 is smartwatch, therefore RAM limitation is like on Android
+
                         val maxItems = when(comm.model) {
                             MODEL_GT2_PRO -> 10
-                            MODEL_GT3, MODEL_GT3PRO -> 25
+                            MODEL_GT3, MODEL_YODA -> 25
+                            MODEL_GT3PRO -> 30
+                            MODEL_WATCH3 -> Int.MAX_VALUE
                             else -> 10
                         }
 
