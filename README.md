@@ -44,7 +44,7 @@ for details how to do it.
 
 Be aware I created a convenient [script](https://github.com/minkiapps/LiveScore-Wearable-Demo/blob/main/hos/build_and_push_haps) for fast deployment of different litewearable modules at same time.
 
-<br/>
-<br/>
-<br/>
-Icons in the app are taken from [Flaticons](https://www.flaticon.com/).
+<br></br>
+<br></br>
+<br></br>
+Icons in the app are taken from [flaticon](https://www.flaticon.com).
