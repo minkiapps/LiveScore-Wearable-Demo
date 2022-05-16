@@ -9,7 +9,7 @@ Jetpack Compose. The main mechanic is to start a Foreground Service which mainta
 
 #### Demo
 
-![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/52449229/168597649-6a08b2d2-4772-44c8-9b61-abc8ff8383fa.gif)
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/52449229/168605967-4c39647f-9159-4681-ae03-f54b323827b8.gif)
 
 ### HarmonyOS (hos)
 The HarmonyOS app is responsible of displaying the live score data which is received from the Android app in a list UI element. 
