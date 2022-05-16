@@ -1,10 +1,10 @@
 import router from '@system.router';
-import { MessageClient, Message, Builder } from '../../../../../../../wearengine/messageclient.js'
+import { MessageClient, Message, Builder } from '../../../../../../../wearengine/smartwatch/messageclient.js'
 
 export default {
 
     data: {
-        ui_status : 1, //-1 initial, 0 loading, 1 error, 2 loaded
+        ui_status : -1, //-1 initial, 0 loading, 1 error, 2 loaded
         sport_list : [],
         //loading ui
         loadingText : "",

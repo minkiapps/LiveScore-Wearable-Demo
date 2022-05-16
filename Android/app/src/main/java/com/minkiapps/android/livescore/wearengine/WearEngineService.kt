@@ -205,6 +205,7 @@ class WearEngineService : Service(), LogListener {
         val sendCallback: SendCallback = object : SendCallback {
             override fun onSendResult(resultCode: Int) {
                 emitDebugLog("Send message result: $resultCode")
+                file.delete()
             }
             override fun onSendProgress(progress: Long) {
                 emitDebugLog("Send message progress: $progress")
@@ -213,7 +214,6 @@ class WearEngineService : Service(), LogListener {
 
         p2pClient.send(device, message, sendCallback).addOnSuccessListener {
             emitDebugLog("Send message successful")
-            file.delete()
         }.addOnFailureListener {
             emitDebugLog("Send message failed")
             file.delete()

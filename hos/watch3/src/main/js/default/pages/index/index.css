@@ -15,7 +15,7 @@
 
 .loading_text {
     text-color: white;
-    font-size: 14fp;
+    font-size: 18fp;
     margin-top: 8px;
 }
 
@@ -29,16 +29,17 @@
     width: 100%;
     padding-left: 32px;
     padding-right: 32px;
+    font-size: 18px;
     text-align: center;
 }
 
 .retry_text {
     background-color: dodgerblue;
     border-radius: 32px;
-    margin-top: 32px;
-    width: 240px;
-    height: 64px;
-    font-size: 30px;
+    margin-top: 8px;
+    width: 120px;
+    height: 32px;
+    font-size: 20px;
     text-align: center;
 }
 

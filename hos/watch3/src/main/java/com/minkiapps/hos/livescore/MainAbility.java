@@ -7,6 +7,7 @@ public class MainAbility extends AceAbility {
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
+        setSwipeToDismiss(false);
     }
 
     @Override

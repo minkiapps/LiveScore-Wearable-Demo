@@ -1,5 +1,5 @@
-import {P2pClient, Builder, Message} from './wearengine_minified.js';
-import {PEER_FINGER_PRINT, PEER_PACKAGE_NAME} from './constants.js'
+import {P2pClient, Builder, Message} from './wearengine.js'
+import {PEER_FINGER_PRINT, PEER_PACKAGE_NAME} from './../constants.js'
 
 export var MessageClient = new P2pClient();
 MessageClient.setPeerPkgName(PEER_PACKAGE_NAME)
