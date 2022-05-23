@@ -25,9 +25,9 @@ written in Javascript, HML and CSS.
 
 #### Demo
 
-| GT2Pro        | GT3          | Fit2 |
-| ------------- | -------------| -----|
-| ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/52449229/168597232-6acfc494-c04e-470d-a1ca-28b4ee0f0d01.gif) | ![gt3](https://user-images.githubusercontent.com/52449229/168593261-954bc01c-3cec-4e20-8ca1-5aa4bb6bc201.gif) | ![yoda_new](https://user-images.githubusercontent.com/52449229/168595501-99a2c9d4-20e7-4abe-bf28-6f4c1cce1c5f.gif) |
+| GT2Pro        | GT3          | GT3Pro | Fit2 |
+| ------------- | -------------| -------| -----|
+| ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/52449229/168597232-6acfc494-c04e-470d-a1ca-28b4ee0f0d01.gif) | ![gt3](https://user-images.githubusercontent.com/52449229/168593261-954bc01c-3cec-4e20-8ca1-5aa4bb6bc201.gif) | ![gt3pro](https://user-images.githubusercontent.com/52449229/169787432-ffbdf13c-9ba8-4ca7-8257-a827a1b31fa4.gif) | ![yoda_new](https://user-images.githubusercontent.com/52449229/168595501-99a2c9d4-20e7-4abe-bf28-6f4c1cce1c5f.gif) |
 
 ## Installation and Setup
 
