@@ -29,6 +29,10 @@ written in Javascript, HML and CSS.
 | ------------- | -------------| -------| -----|
 | ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/52449229/168597232-6acfc494-c04e-470d-a1ca-28b4ee0f0d01.gif) | ![gt3](https://user-images.githubusercontent.com/52449229/168593261-954bc01c-3cec-4e20-8ca1-5aa4bb6bc201.gif) | ![gt3pro](https://user-images.githubusercontent.com/52449229/169787432-ffbdf13c-9ba8-4ca7-8257-a827a1b31fa4.gif) | ![yoda_new](https://user-images.githubusercontent.com/52449229/168595501-99a2c9d4-20e7-4abe-bf28-6f4c1cce1c5f.gif) |
 
+| Watch3 |
+| ------ |
+| ![ezgif com-gif-maker](https://user-images.githubusercontent.com/52449229/169837078-22f32889-47d0-4a89-805c-790285d656ac.gif) |
+
 ## Installation and Setup
 
 ### Android
@@ -42,7 +46,7 @@ Apply for wearengine in Huawei Developer Console, configure signing and bundle n
 Refer to [official documentation](https://developer.huawei.com/consumer/en/doc/development/connectivity-Guides/service-introduction-0000000000018585)
 for details how to do it. 
 
-Be aware I created a convenient [script](https://github.com/minkiapps/LiveScore-Wearable-Demo/blob/main/hos/build_and_push_haps) for fast deployment of different litewearable modules at same time.
+Be aware I created a convenient [script](https://github.com/minkiapps/LiveScore-Wearable-Demo/blob/main/hos/build_push_litewearable_haps) for fast deployment of different litewearable modules at same time.
 
 <br></br>
 <br></br>
