@@ -28,6 +28,11 @@
                     {{ $item.name }}
                 </text>
 
+                <div style="width : 100%; flex-direction : row; justify-content: space-around">
+                    <image style="margin-top : 2px; width : 24px; height: 24px; object-fit: fill;" src="{{$item.home_team.logo}}"></image>
+                    <image style="margin-top : 2px; width : 24px; height: 24px; object-fit: fill;" src="{{$item.away_team.logo}}"></image>
+                </div>
+
                 <text style="width : 100%; color : #DF584D; font-size : 28px; text-align : center; padding-left : 16px;
                         padding-right : 16px;">
                     {{ formatDisplayString($item.home_score.display, $item.away_score.display) }}

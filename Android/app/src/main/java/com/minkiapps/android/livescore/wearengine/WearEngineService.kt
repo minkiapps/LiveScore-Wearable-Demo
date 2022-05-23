@@ -26,7 +26,7 @@ import com.minkiapps.android.livescore.log.LogListener
 import com.minkiapps.android.livescore.log.LogModel
 import com.minkiapps.android.livescore.log.Type
 import com.minkiapps.android.livescore.network.ApiService
-import com.minkiapps.android.livescore.network.model.Wrapper
+import com.minkiapps.android.livescore.network.model.LiteWrapper
 import com.minkiapps.android.livescore.network.model.formatStartedAt
 import com.minkiapps.android.livescore.prefs.AppPreferences
 import com.minkiapps.android.livescore.wearengine.model.*
@@ -160,27 +160,9 @@ class WearEngineService : Service(), LogListener {
                         //noop
                     }
                     COMM_GET_LIVE_EVENTS -> {
-                        val wrapper = apiService.fetchLiveEvents(comm.intParam1)
 
-                        //limit items to avoid OOM on the wearable site
+                        val jsonString = fetchJsonString(comm.model, comm.intParam1)
 
-                        //GT2 Pro has 32KB RAM for each app
-                        //GT3 and Yoda have 48KB RAM for each app
-                        //GT3 Pro has 64KB RAM for each app
-                        //Watch3 is smartwatch, therefore RAM limitation is like on Android
-
-                        val maxItems = when(comm.model) {
-                            MODEL_GT2_PRO -> 10
-                            MODEL_GT3, MODEL_YODA -> 25
-                            MODEL_GT3PRO -> 30
-                            MODEL_WATCH3 -> Int.MAX_VALUE
-                            else -> 10
-                        }
-
-                        val minified = Wrapper(wrapper.data.subList(0,
-                            min(max(0, wrapper.data.size - 1), maxItems)
-                        ).map { it.copy(start_at = it.formatStartedAt()) })
-                        val jsonString = gson.toJson(minified)
                         Timber.d("Sending message: $jsonString")
                         emitDebugLog("Sending message length: ${jsonString.length}")
                         sendMessage(device, jsonString)
@@ -189,6 +171,32 @@ class WearEngineService : Service(), LogListener {
             } catch (e : Exception) {
                 emitExceptionLog("Failed to process wearable message", e)
             }
+        }
+    }
+
+    private suspend fun fetchJsonString(wearableModel : String, sportType : Int) : String {
+        //limit items and data to avoid OOM on the wearable site
+
+        //GT2 Pro has 32KB RAM for each app
+        //GT3 and Yoda have 48KB RAM for each app
+        //GT3 Pro has 64KB RAM for each app
+        //Watch3 is smartwatch, therefore RAM limitation is like on Android
+
+        return if(wearableModel == MODEL_WATCH3) {
+            val wrapper = apiService.fetchLiveEvents(sportType)
+            gson.toJson(wrapper)
+        } else {
+            val wrapper = apiService.fetchLiteLiveEvents(sportType)
+            val maxItems = when(wearableModel) {
+                MODEL_GT2_PRO -> 10
+                MODEL_GT3, MODEL_YODA, MODEL_GT3PRO -> 25
+                else -> 10
+            }
+
+            val minified = LiteWrapper(wrapper.data.subList(0,
+                min(max(0, wrapper.data.size - 1), maxItems)
+            ).map { it.copy(start_at = it.formatStartedAt()) })
+            gson.toJson(minified)
         }
     }
 
@@ -205,7 +213,8 @@ class WearEngineService : Service(), LogListener {
         val sendCallback: SendCallback = object : SendCallback {
             override fun onSendResult(resultCode: Int) {
                 emitDebugLog("Send message result: $resultCode")
-                file.delete()
+                val success = file.delete()
+                emitDebugLog("Temp file deleted: $success")
             }
             override fun onSendProgress(progress: Long) {
                 emitDebugLog("Send message progress: $progress")

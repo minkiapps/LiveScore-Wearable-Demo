@@ -1,6 +1,6 @@
 package com.minkiapps.android.livescore.wearengine
 
-const val TEST_DATA = """
+const val TEST_LITE_WEARABLE_DATA = """
 {
 	"data": [{
 		"away_score": {

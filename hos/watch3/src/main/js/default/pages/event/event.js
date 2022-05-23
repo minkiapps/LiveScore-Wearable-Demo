@@ -9,9 +9,15 @@ export default {
         errorText: '',
         sportName: '',
         sportLogo: '',
-        events: [],
+        events: []
         /**events: [
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 1
                 },
@@ -23,6 +29,12 @@ export default {
                 "status_more": "3rd set"
             },
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 0
                 },
@@ -34,6 +46,12 @@ export default {
                 "status_more": "2nd set"
             },
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 0
                 },
@@ -45,6 +63,12 @@ export default {
                 "status_more": "1st set"
             },
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 0
                 },
@@ -56,6 +80,12 @@ export default {
                 "status_more": "1st set"
             },
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 1
                 },
@@ -67,6 +97,12 @@ export default {
                 "status_more": "3rd set"
             },
             {
+                "home_team": {
+                    "logo" : "https://tipsscore.com/resb/team/changnyeong-wfc.png"
+                },
+                "away_team": {
+                    "logo": "https://tipsscore.com/resb/team/seoul-city-wfc.png"
+                },
                 "away_score": {
                     "display": 1
                 },
@@ -165,11 +201,17 @@ export default {
                 console.log(`Event page: received message: ${message.name}`)
 
                 if (message && message.isFileType) {
-                    flash.parseJSON(message)
+                    //need some time delay for watch3 to work
+                    setTimeout(() => {
+                        flash.parseJSON(message)
+                    }, 1000)
                 }
             },
         }
-        MessageClient.registerReceiver(receiver)
+
+        setTimeout(() => { //need a delay or the unregister receiver in index.js onDestroy may affect, since wearengine can only have a receiver
+            MessageClient.registerReceiver(receiver)
+        }, 1000)
     },
 
     parseJSON(message) {
@@ -178,7 +220,7 @@ export default {
         file.readText({
             uri: message.name,
             success: function (data) {
-                console.log('Event page: Received JSON string length: ' + data.text.length)
+                console.log('Event page: Received JSON string: ' + data.text)
                 try {
                     var events = JSON.parse(data.text).data
                     flash.events = events

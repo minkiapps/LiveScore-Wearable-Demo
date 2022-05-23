@@ -1,3 +1,4 @@
+import app from '@system.app';
 import router from '@system.router';
 import { MessageClient, Message, Builder } from '../../../../../../../wearengine/smartwatch/messageclient.js'
 

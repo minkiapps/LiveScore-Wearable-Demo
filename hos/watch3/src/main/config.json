@@ -7,7 +7,13 @@
       "name": "1.0.0"
     }
   },
-  "deviceConfig": {},
+  "deviceConfig": {
+    "default": {
+      "network": {
+        "cleartextTraffic": true
+      }
+    }
+  },
   "module": {
     "package": "com.minkiapps.hos.livescore",
     "metaData": {
@@ -51,6 +57,9 @@
       }
     ],
     "reqPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      },
       {
         "name": "ohos.permission.VIBRATE"
       }
