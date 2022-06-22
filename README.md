@@ -18,16 +18,22 @@ written in Javascript, HML and CSS.
 
 - Huawei Sportwatch (Litewearable)
   - Watch GT2 Pro
+  - Watch GT Runner 
   - Watch GT3 and GT3 Pro
-  - Watch Fit2 (Codename Yoda)
+  - Watch Fit2 
 - Huawei Smartwatch (Smartwearable)
   - Watch3
 
+Use Gradle module gt2 for GT2 Pro</br>
+Use Gradle module gt3 for GT Runner, GT3, GT3 Pro</br>
+Use Gradle module yoda for Fit2</br>
+Use Gradle module watch3 for Watch3</br>
+
 #### Demo
 
-| GT2Pro        | GT3          | GT3Pro | Fit2 |
-| ------------- | -------------| -------| -----|
-| ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/52449229/168597232-6acfc494-c04e-470d-a1ca-28b4ee0f0d01.gif) | ![gt3](https://user-images.githubusercontent.com/52449229/168593261-954bc01c-3cec-4e20-8ca1-5aa4bb6bc201.gif) | ![gt3pro](https://user-images.githubusercontent.com/52449229/169787432-ffbdf13c-9ba8-4ca7-8257-a827a1b31fa4.gif) | ![yoda_new](https://user-images.githubusercontent.com/52449229/168595501-99a2c9d4-20e7-4abe-bf28-6f4c1cce1c5f.gif) |
+| GT2Pro        | GT Runner    | GT3          | GT3Pro | Fit2 |
+| ------------- | -------------| -------------| -------| -----|
+| ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/52449229/168597232-6acfc494-c04e-470d-a1ca-28b4ee0f0d01.gif) | ![gt3_runner](https://user-images.githubusercontent.com/52449229/175099207-7fc148b1-481c-465a-a36d-d1e97fb47828.gif) | ![gt3](https://user-images.githubusercontent.com/52449229/168593261-954bc01c-3cec-4e20-8ca1-5aa4bb6bc201.gif) | ![gt3pro](https://user-images.githubusercontent.com/52449229/169787432-ffbdf13c-9ba8-4ca7-8257-a827a1b31fa4.gif) | ![yoda_new](https://user-images.githubusercontent.com/52449229/168595501-99a2c9d4-20e7-4abe-bf28-6f4c1cce1c5f.gif) |
 
 | Watch3 |
 | ------ |
